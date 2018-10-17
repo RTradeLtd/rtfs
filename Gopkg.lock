@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  digest = "1:d1bd50f99153bf8a6a0064719ccd9188b34e4dcc721c09d3bf0b3760cf88f078"
+  branch = "master"
+  digest = "1:0b9cab5474015038cc258d2af017ebaa01f2fb387ca2ab7eb78516f46669954c"
   name = "github.com/RTradeLtd/go-ipfs-api"
   packages = ["."]
   pruneopts = "UT"
-  revision = "4e18c90494642212ec8f4a64e9328e6a4306a204"
-  version = "v1.2.1"
+  revision = "e1616d7744cac33b32bb8b55c35fff63c67d360e"
 
 [[projects]]
   branch = "master"
@@ -75,6 +75,14 @@
   version = "v1.5.7"
 
 [[projects]]
+  digest = "1:19f2d2506cc0f9a233c9c0753e8c3fd5afa88afb43ff7b795cbba3629d0e96b5"
+  name = "github.com/libp2p/go-flow-metrics"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "cc546389dcf06b4bcbf6b8594069588e5c8a1451"
+  version = "v0.2.0"
+
+[[projects]]
   digest = "1:4ff86c6d6dd8df23a58e6b6060fea5f150d1a502cdfe8a3e9efd5d25339196c6"
   name = "github.com/libp2p/go-libp2p-crypto"
   packages = [
@@ -86,12 +94,28 @@
   version = "v2.0.1"
 
 [[projects]]
+  digest = "1:e01814b1390e3abc93ca170141d457fab1dcc0c532cdfdd269be58fb2cd6a9f4"
+  name = "github.com/libp2p/go-libp2p-metrics"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "20c0e3fed14ddf84ac8192038accfd393610ed82"
+  version = "v2.1.7"
+
+[[projects]]
   digest = "1:d59d3f32a53e3d1ef4f19f92c8f4cbccabfae6c965760577958b2fb937fede98"
   name = "github.com/libp2p/go-libp2p-peer"
   packages = ["."]
   pruneopts = "UT"
   revision = "dd9b45c0649b38aebe65f98cb460676b4214a42c"
   version = "v2.4.0"
+
+[[projects]]
+  digest = "1:99c29233479cb14a63c7cb6b49927a60ae9d6b4b36d74deb12cc45ce503ddeb5"
+  name = "github.com/libp2p/go-libp2p-protocol"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "e34f0d7468b3519bf9bf4e43c1d028ce651eab51"
+  version = "v1.0.0"
 
 [[projects]]
   digest = "1:9b60f7fe71b4d55377c2082dcb3d1db35e7e1a0917cf73217cbe84c892506685"
