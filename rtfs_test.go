@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/RTradeLtd/Temporal/rtfs"
+	rtfs "github.com/RTradeLtd/RTFS"
 )
 
 const (

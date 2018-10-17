@@ -26,12 +26,8 @@
 
 
 [[constraint]]
-  name = "github.com/RTradeLtd/Temporal"
-  version = "1.0.0-beta.3"
-
-[[constraint]]
-  branch = "master-rtrade"
   name = "github.com/RTradeLtd/go-ipfs-api"
+  version = "1.2.1"
 
 [[constraint]]
   branch = "master"
@@ -39,7 +35,7 @@
 
 [[constraint]]
   name = "github.com/libp2p/go-libp2p-crypto"
-  version = "1.6.2"
+  version = "2.0.1"
 
 [prune]
   go-tests = true
