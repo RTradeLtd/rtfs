@@ -18,8 +18,7 @@ type IpfsManager struct {
 	KeystoreManager *KeystoreManager
 	KeystoreEnabled bool
 	PubTopic        string
-
-	nodeAPIAddr string
+	nodeAPIAddr     string
 }
 
 // Initialize is used ot initialize our Ipfs manager struct

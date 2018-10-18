@@ -8,6 +8,7 @@ import (
 	rtfs "github.com/RTradeLtd/RTFS"
 )
 
+// test variables
 const (
 	testPIN        = "QmNZiPk974vDsPmQii3YbrMKfi12KTSNM7XMiYyiea4VYZ"
 	nodeOneAPIAddr = "192.168.1.101:5001"

@@ -15,10 +15,6 @@ func TestKeystoreManager_noCustomPath(t *testing.T) {
 	rtfs.GenerateKeystoreManager()
 }
 
-/*
-	if we dont disable gocache, the key generate will always be the same
-	env GOCACHE=off go test -v ....
-*/
 func TestKeystoreManager(t *testing.T) {
 	defer func() {
 		if err := os.RemoveAll("temp"); err != nil {
