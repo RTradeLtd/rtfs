@@ -13,7 +13,7 @@ import (
 
 // IpfsManager is our helper wrapper for IPFS
 type IpfsManager struct {
-	Shell           *ipfsapi.Shell
+	shell           *ipfsapi.Shell
 	PubSub          *ipfsapi.PubSubSubscription
 	KeystoreManager *KeystoreManager
 	KeystoreEnabled bool
@@ -24,12 +24,12 @@ type IpfsManager struct {
 // Initialize is used ot initialize our Ipfs manager struct
 func Initialize(pubTopic, connectionURL string) (*IpfsManager, error) {
 	manager := IpfsManager{
-		Shell:       EstablishShellWithNode(connectionURL),
+		shell:       EstablishShellWithNode(connectionURL),
 		PubTopic:    pubTopic,
 		nodeAPIAddr: connectionURL,
 	}
 	manager.SetTimeout(time.Minute * 10)
-	_, err := manager.Shell.ID()
+	_, err := manager.shell.ID()
 	return &manager, err
 }
 
@@ -45,7 +45,7 @@ func EstablishShellWithNode(url string) *ipfsapi.Shell {
 
 // SetTimeout is used to set a timeout for our api client
 func (im *IpfsManager) SetTimeout(time time.Duration) {
-	im.Shell.SetTimeout(time)
+	im.shell.SetTimeout(time)
 }
 
 // CreateKeystoreManager is used to create a key store manager for ipfs keys
@@ -72,7 +72,7 @@ func (im *IpfsManager) PublishToIPNSDetails(contentHash, keyName string, lifetim
 	if !keyPresent {
 		return nil, errors.New("attempting to sign with non existent key")
 	}
-	resp, err := im.Shell.PublishWithDetails(contentHash, keyName, lifetime, ttl, resolve)
+	resp, err := im.shell.PublishWithDetails(contentHash, keyName, lifetime, ttl, resolve)
 	if err != nil {
 		return nil, err
 	}
@@ -83,11 +83,8 @@ func (im *IpfsManager) PublishToIPNSDetails(contentHash, keyName string, lifetim
 // but also alert the rest of the local nodes to pin
 // after which the pin will be sent to the cluster
 func (im *IpfsManager) Pin(hash string) error {
-	err := im.Shell.Pin(hash)
-	if err != nil {
-		// TODO: add error reporting
-		fmt.Println(err)
-		return err
+	if err := im.shell.Pin(hash); err != nil {
+		return fmt.Errorf("failed to pin %s: %s", hash, err.Error())
 	}
 	return nil
 }
@@ -96,7 +93,7 @@ func (im *IpfsManager) Pin(hash string) error {
 // currently until https://github.com/ipfs/go-ipfs/issues/5376 it is added with no pin
 // thus a manual pin must be triggered afterwards
 func (im *IpfsManager) Add(r io.Reader) (string, error) {
-	hash, err := im.Shell.AddNoPin(r)
+	hash, err := im.shell.AddNoPin(r)
 	if err != nil {
 		return "", err
 	}
@@ -105,7 +102,7 @@ func (im *IpfsManager) Add(r io.Reader) (string, error) {
 
 // GetObjectFileSizeInBytes is used to retrieve the cumulative byte size of an object
 func (im *IpfsManager) GetObjectFileSizeInBytes(key string) (int, error) {
-	stat, err := im.Shell.ObjectStat(key)
+	stat, err := im.shell.ObjectStat(key)
 	if err != nil {
 		return 0, err
 	}
@@ -114,7 +111,7 @@ func (im *IpfsManager) GetObjectFileSizeInBytes(key string) (int, error) {
 
 // ObjectStat is used to retrieve the stats about an object
 func (im *IpfsManager) ObjectStat(key string) (*ipfsapi.ObjectStats, error) {
-	stat, err := im.Shell.ObjectStat(key)
+	stat, err := im.shell.ObjectStat(key)
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +120,7 @@ func (im *IpfsManager) ObjectStat(key string) (*ipfsapi.ObjectStats, error) {
 
 // ParseLocalPinsForHash checks whether or not a pin is present
 func (im *IpfsManager) ParseLocalPinsForHash(hash string) (bool, error) {
-	pins, err := im.Shell.Pins()
+	pins, err := im.shell.Pins()
 	if err != nil {
 		return false, err
 	}
@@ -141,7 +138,7 @@ func (im *IpfsManager) PublishPubSubMessage(topic string, data string) error {
 	if topic == "" && data == "" {
 		return errors.New("invalid topic and data")
 	}
-	err := im.Shell.PubSubPublish(topic, data)
+	err := im.shell.PubSubPublish(topic, data)
 	if err != nil {
 		fmt.Println("error publishing data ", err.Error())
 		return err
