@@ -13,9 +13,9 @@ type KeystoreManager struct {
 	fs *keystore.FSKeystore
 }
 
-// GenerateKeystoreManager instantiates a new keystore manager. Takes an optional
+// NewKeystoreManager instantiates a new keystore manager. Takes an optional
 // filepath for the store.
-func GenerateKeystoreManager(keystorePath ...string) (*KeystoreManager, error) {
+func NewKeystoreManager(keystorePath ...string) (*KeystoreManager, error) {
 	var storePath = DefaultFSKeystorePath
 	if keystorePath != nil && len(keystorePath) > 0 {
 		storePath = keystorePath[0]
