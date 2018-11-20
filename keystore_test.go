@@ -7,12 +7,12 @@ import (
 	"os"
 	"testing"
 
-	rtfs "github.com/RTradeLtd/RTFS"
+	"github.com/RTradeLtd/rtfs"
 	ci "github.com/libp2p/go-libp2p-crypto"
 )
 
 func TestKeystoreManager_noCustomPath(t *testing.T) {
-	rtfs.GenerateKeystoreManager()
+	rtfs.NewKeystoreManager()
 }
 
 func TestKeystoreManager(t *testing.T) {
@@ -22,7 +22,7 @@ func TestKeystoreManager(t *testing.T) {
 		}
 	}()
 
-	km, err := rtfs.GenerateKeystoreManager("temp")
+	km, err := rtfs.NewKeystoreManager("temp")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -86,7 +86,7 @@ func TestGetKey(t *testing.T) {
 		k2 = "test1"
 	)
 
-	km, err := rtfs.GenerateKeystoreManager("temp")
+	km, err := rtfs.NewKeystoreManager("temp")
 	if err != nil {
 		t.Fatal(err)
 	}
