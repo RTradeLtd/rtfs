@@ -113,8 +113,7 @@ func (im *IpfsManager) PublishPubSubMessage(topic string, data string) error {
 	if topic == "" && data == "" {
 		return errors.New("invalid topic and data")
 	}
-	err := im.shell.PubSubPublish(topic, data)
-	if err != nil {
+	if err := im.shell.PubSubPublish(topic, data); err != nil {
 		return fmt.Errorf("error publishing data: %s", err.Error())
 	}
 	return nil
