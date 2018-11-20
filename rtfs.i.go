@@ -35,4 +35,8 @@ type Manager interface {
 	// DHTFindProvs is used to find providers of a given CID
 	// Currently bugged and wil only fetch 1 provider
 	DHTFindProvs(cid, numProviders string) error
+	// DagGet is used to get an ipld object
+	DagGet(cid string, out interface{}) error
+	// DagPut is used to store data as an ipld object
+	DagPut(data interface{}, encoding, kind string) (string, error)
 }
