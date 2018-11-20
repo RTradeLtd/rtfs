@@ -3,14 +3,6 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:2f5e62d1571fb43065447d94e0889e3b731201709601e5048eda8e6fbd7bcc05"
-  name = "github.com/RTradeLtd/RTFS"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "7bc77b718377535e8280b049ad311f6549900517"
-
-[[projects]]
-  branch = "master"
   digest = "1:0b9cab5474015038cc258d2af017ebaa01f2fb387ca2ab7eb78516f46669954c"
   name = "github.com/RTradeLtd/go-ipfs-api"
   packages = ["."]
@@ -284,7 +276,6 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/RTradeLtd/RTFS",
     "github.com/RTradeLtd/go-ipfs-api",
     "github.com/ipfs/go-ipfs-keystore",
     "github.com/libp2p/go-libp2p-crypto",
