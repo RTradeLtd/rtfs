@@ -2,6 +2,7 @@ package rtfs
 
 import (
 	"errors"
+	"fmt"
 
 	keystore "github.com/ipfs/go-ipfs-keystore"
 	ci "github.com/libp2p/go-libp2p-crypto"
@@ -30,53 +31,34 @@ func GenerateKeystoreManager(keystorePath ...string) (*KeystoreManager, error) {
 
 // CheckIfKeyExists is used to check if a key exists
 func (km *KeystoreManager) CheckIfKeyExists(keyName string) (bool, error) {
-	present, err := km.fs.Has(keyName)
-	if err != nil {
-		return false, err
-	}
-	return present, nil
+	return km.fs.Has(keyName)
 }
 
 // GetPrivateKeyByName is used to get a private key by its name
 func (km *KeystoreManager) GetPrivateKeyByName(keyName string) (ci.PrivKey, error) {
-	pk, err := km.fs.Get(keyName)
-	if err != nil {
-		return nil, err
-	}
-	return pk, nil
+	return km.fs.Get(keyName)
 }
 
 // ListKeyIdentifiers will list out all key IDs (aka, public hashes)
 func (km *KeystoreManager) ListKeyIdentifiers() ([]string, error) {
-	keys, err := km.fs.List()
-	if err != nil {
-		return nil, err
-	}
-	return keys, nil
+	return km.fs.List()
 }
 
 // SavePrivateKey is used to save a private key under the specified name
 func (km *KeystoreManager) SavePrivateKey(keyName string, pk ci.PrivKey) error {
-	err := km.fs.Put(keyName, pk)
-	if err != nil {
-		return err
-	}
-	return nil
+	return km.fs.Put(keyName, pk)
 }
 
 // CreateAndSaveKey is used to create a key of the given type and size
 func (km *KeystoreManager) CreateAndSaveKey(keyName string, keyType, bits int) (ci.PrivKey, error) {
-	var pk ci.PrivKey
-	var err error
-
-	present, err := km.fs.Has(keyName)
-	if err != nil {
-		return nil, err
-	}
-	if present {
+	if present, err := km.fs.Has(keyName); err != nil {
+		return nil, fmt.Errorf("failed to check for key '%s': %s", keyName, err.Error())
+	} else if present {
 		return nil, errors.New("key name already exists")
 	}
 
+	var pk ci.PrivKey
+	var err error
 	switch keyType {
 	case ci.Ed25519:
 		pk, _, err = ci.GenerateKeyPair(keyType, 256)
@@ -92,8 +74,7 @@ func (km *KeystoreManager) CreateAndSaveKey(keyName string, keyType, bits int) (
 		return nil, errors.New("key type provided not a valid key type")
 	}
 
-	err = km.SavePrivateKey(keyName, pk)
-	if err != nil {
+	if err = km.SavePrivateKey(keyName, pk); err != nil {
 		return nil, err
 	}
 
