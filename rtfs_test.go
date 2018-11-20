@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	rtfs "github.com/RTradeLtd/RTFS"
+	"github.com/RTradeLtd/rtfs"
 )
 
 // test variables

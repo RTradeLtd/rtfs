@@ -9,16 +9,13 @@ import (
 
 // KeystoreManager is howe we manipulat keys
 type KeystoreManager struct {
-	FSKeystore *keystore.FSKeystore
+	fs *keystore.FSKeystore
 }
 
 // GenerateKeystoreManager instantiates a new keystore manager. Takes an optional
 // filepath for the store.
 func GenerateKeystoreManager(keystorePath ...string) (*KeystoreManager, error) {
-	var (
-		storePath = DefaultFSKeystorePath
-		km        KeystoreManager
-	)
+	var storePath = DefaultFSKeystorePath
 	if keystorePath != nil && len(keystorePath) > 0 {
 		storePath = keystorePath[0]
 	}
@@ -26,13 +23,14 @@ func GenerateKeystoreManager(keystorePath ...string) (*KeystoreManager, error) {
 	if err != nil {
 		return nil, err
 	}
-	km.FSKeystore = fsk
-	return &km, nil
+	return &KeystoreManager{
+		fs: fsk,
+	}, nil
 }
 
 // CheckIfKeyExists is used to check if a key exists
 func (km *KeystoreManager) CheckIfKeyExists(keyName string) (bool, error) {
-	present, err := km.FSKeystore.Has(keyName)
+	present, err := km.fs.Has(keyName)
 	if err != nil {
 		return false, err
 	}
@@ -41,7 +39,7 @@ func (km *KeystoreManager) CheckIfKeyExists(keyName string) (bool, error) {
 
 // GetPrivateKeyByName is used to get a private key by its name
 func (km *KeystoreManager) GetPrivateKeyByName(keyName string) (ci.PrivKey, error) {
-	pk, err := km.FSKeystore.Get(keyName)
+	pk, err := km.fs.Get(keyName)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +48,7 @@ func (km *KeystoreManager) GetPrivateKeyByName(keyName string) (ci.PrivKey, erro
 
 // ListKeyIdentifiers will list out all key IDs (aka, public hashes)
 func (km *KeystoreManager) ListKeyIdentifiers() ([]string, error) {
-	keys, err := km.FSKeystore.List()
+	keys, err := km.fs.List()
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +57,7 @@ func (km *KeystoreManager) ListKeyIdentifiers() ([]string, error) {
 
 // SavePrivateKey is used to save a private key under the specified name
 func (km *KeystoreManager) SavePrivateKey(keyName string, pk ci.PrivKey) error {
-	err := km.FSKeystore.Put(keyName, pk)
+	err := km.fs.Put(keyName, pk)
 	if err != nil {
 		return err
 	}
@@ -71,7 +69,7 @@ func (km *KeystoreManager) CreateAndSaveKey(keyName string, keyType, bits int) (
 	var pk ci.PrivKey
 	var err error
 
-	present, err := km.FSKeystore.Has(keyName)
+	present, err := km.fs.Has(keyName)
 	if err != nil {
 		return nil, err
 	}

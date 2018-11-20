@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	rtfs "github.com/RTradeLtd/RTFS"
+	"github.com/RTradeLtd/rtfs"
 	ci "github.com/libp2p/go-libp2p-crypto"
 )
 
