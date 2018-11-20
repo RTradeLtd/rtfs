@@ -6,7 +6,6 @@ services:
 sudo: required
 
 install:
-  - docker pull koalaman/shellcheck
   - go get -u golang.org/x/lint/golint
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
   - dep ensure -v
