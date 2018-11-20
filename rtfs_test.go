@@ -2,6 +2,7 @@ package rtfs_test
 
 import (
 	"context"
+	"encoding/json"
 	"testing"
 
 	"github.com/RTradeLtd/rtfs"
@@ -91,5 +92,37 @@ func TestObjectStat(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 		return
+	}
+}
+
+func TestDagGet(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var out interface{}
+	if err = im.DagGet(testPIN, &out); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestDagPut(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	type testDag struct {
+		Foo string `json:"foo"`
+		Bar string `json:"bar"`
+	}
+	a := testDag{"hello", "world"}
+	marshaled, err := json.Marshal(&a)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp, err := im.DagPut(marshaled, "json", "cbor"); err != nil {
+		t.Fatal(err)
+	} else if resp == "" {
+		t.Fatal("unexpected error occured")
 	}
 }

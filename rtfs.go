@@ -134,3 +134,13 @@ func (im *IpfsManager) DHTFindProvs(cid, numProviders string) error {
 	}
 	return resp.Decode(&out)
 }
+
+// DagGet is used to get an ipld object
+func (im *IpfsManager) DagGet(cid string, out interface{}) error {
+	return im.shell.DagGet(cid, out)
+}
+
+// DagPut is used to store data as an ipld object
+func (im *IpfsManager) DagPut(data interface{}, encoding, kind string) (string, error) {
+	return im.shell.DagPut(data, encoding, kind)
+}
