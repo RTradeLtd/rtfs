@@ -24,3 +24,8 @@ lint: vendor
 .PHONY: clean
 clean:
 	( cd testenv ; make clean )
+
+.PHONY: check
+check:
+	go vet ./...
+	go test -run xxxx ./...

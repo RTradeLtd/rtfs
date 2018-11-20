@@ -13,36 +13,42 @@ import (
 
 // IpfsManager is our helper wrapper for IPFS
 type IpfsManager struct {
-	PubSub *ipfsapi.PubSubSubscription
+	PubTopic string
 
 	shell       *ipfsapi.Shell
 	keystore    *KeystoreManager
-	PubTopic    string
+	pubsub      *ipfsapi.PubSubSubscription
 	nodeAPIAddr string
 }
 
-// Initialize is used ot initialize our Ipfs manager struct
-func Initialize(pubTopic, ipfsURL string, keystore *KeystoreManager) (*IpfsManager, error) {
-	manager := IpfsManager{
-		PubTopic: pubTopic,
+// NewManager is used to initialize our Ipfs manager struct
+func NewManager(pubTopic, ipfsURL string, keystore *KeystoreManager) (*IpfsManager, error) {
+	// set up shell
+	sh := newShell(ipfsURL)
+	sh.SetTimeout(time.Minute * 5)
+	if _, err := sh.ID(); err != nil {
+		return nil, fmt.Errorf("failed to connect to ipfs node at '%s': %s", ipfsURL, err.Error())
+	}
 
-		shell:       newShell(ipfsURL),
+	// subscribe to pubsub
+	sub, err := sh.PubSubSubscribe(pubTopic)
+	if err != nil {
+		return nil, fmt.Errorf("failed to subscribe to pub topic '%s': %s", pubTopic, err.Error())
+	}
+
+	// instantiate manager
+	return &IpfsManager{
+		PubTopic:    pubTopic,
+		shell:       sh,
+		pubsub:      sub,
 		nodeAPIAddr: ipfsURL,
 		keystore:    keystore,
-	}
-	manager.SetTimeout(time.Minute * 10)
-	_, err := manager.shell.ID()
-	return &manager, err
+	}, nil
 }
 
-// newShell is used to establish our api shell for the ipfs node
-func newShell(url string) (sh *ipfsapi.Shell) {
-	if url == "" {
-		sh = ipfsapi.NewShell("localhost:5001")
-	} else {
-		sh = ipfsapi.NewShell(url)
-	}
-	return
+// Close shuts down the manager
+func (im *IpfsManager) Close() error {
+	return im.pubsub.Cancel()
 }
 
 // SetTimeout is used to set a timeout for our api client
@@ -117,6 +123,11 @@ func (im *IpfsManager) PublishPubSubMessage(topic string, data string) error {
 		return fmt.Errorf("error publishing data: %s", err.Error())
 	}
 	return nil
+}
+
+// GetNextRecord retrieves the next record from the PubSubSubscription
+func (im *IpfsManager) GetNextRecord() (ipfsapi.PubSubRecord, error) {
+	return im.pubsub.Next()
 }
 
 // BuildCustomRequest is used to build a custom request
