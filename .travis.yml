@@ -7,6 +7,7 @@ sudo: required
 
 install:
   - go get -u golang.org/x/lint/golint
+  - go get -u github.com/vburenin/ifacemaker
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
   - dep ensure -v
 
@@ -17,7 +18,9 @@ before_script:
   - make testenv
 
 script:
-  # - docker run -v $(pwd):/mnt koalaman/shellcheck **/*.sh(e[' [[ ! `echo "$REPLY" | grep "vendor/" ` ]]'])
+  - make gen
+  - git --no-pager diff
+  - git diff-index --quiet HEAD --
   - diff -u <(echo -n) <(gofmt -d -s `find . -type f -name '*.go' -not -path "./vendor/*"`)
   - diff -u <(echo -n) <(golint `go list ./... | grep -v /vendor/`)
   - go test -race -short -coverprofile=coverage.txt ./...
