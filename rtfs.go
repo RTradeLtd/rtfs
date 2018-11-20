@@ -24,7 +24,7 @@ type IpfsManager struct {
 // Initialize is used ot initialize our Ipfs manager struct
 func Initialize(pubTopic, connectionURL string) (*IpfsManager, error) {
 	manager := IpfsManager{
-		shell:       EstablishShellWithNode(connectionURL),
+		shell:       newShell(connectionURL),
 		PubTopic:    pubTopic,
 		nodeAPIAddr: connectionURL,
 	}
@@ -33,14 +33,14 @@ func Initialize(pubTopic, connectionURL string) (*IpfsManager, error) {
 	return &manager, err
 }
 
-// EstablishShellWithNode is used to establish our api shell for the ipfs node
-func EstablishShellWithNode(url string) *ipfsapi.Shell {
+// newShell is used to establish our api shell for the ipfs node
+func newShell(url string) (sh *ipfsapi.Shell) {
 	if url == "" {
-		shell := ipfsapi.NewShell("localhost:5001")
-		return shell
+		sh = ipfsapi.NewShell("localhost:5001")
+	} else {
+		sh = ipfsapi.NewShell(url)
 	}
-	shell := ipfsapi.NewShell(url)
-	return shell
+	return
 }
 
 // SetTimeout is used to set a timeout for our api client
