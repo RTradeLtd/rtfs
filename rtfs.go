@@ -126,7 +126,7 @@ func (im *IpfsManager) PublishPubSubMessage(topic string, data string) error {
 }
 
 // GetNextRecord retrieves the next record from the PubSubSubscription
-func (im *IpfsManager) GetNextRecord() (ipfsapi.PubSubRecord, error) {
+func (im *IpfsManager) GetNextRecord() (*ipfsapi.Message, error) {
 	return im.pubsub.Next()
 }
 
