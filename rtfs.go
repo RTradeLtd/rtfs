@@ -13,16 +13,13 @@ import (
 
 // IpfsManager is our helper wrapper for IPFS
 type IpfsManager struct {
-	PubTopic string
-
 	shell       *ipfsapi.Shell
 	keystore    *KeystoreManager
-	pubsub      *ipfsapi.PubSubSubscription
 	nodeAPIAddr string
 }
 
 // NewManager is used to initialize our Ipfs manager struct
-func NewManager(pubTopic, ipfsURL string, keystore *KeystoreManager) (*IpfsManager, error) {
+func NewManager(ipfsURL string, keystore *KeystoreManager) (*IpfsManager, error) {
 	// set up shell
 	sh := newShell(ipfsURL)
 	sh.SetTimeout(time.Minute * 5)
@@ -30,25 +27,12 @@ func NewManager(pubTopic, ipfsURL string, keystore *KeystoreManager) (*IpfsManag
 		return nil, fmt.Errorf("failed to connect to ipfs node at '%s': %s", ipfsURL, err.Error())
 	}
 
-	// subscribe to pubsub
-	sub, err := sh.PubSubSubscribe(pubTopic)
-	if err != nil {
-		return nil, fmt.Errorf("failed to subscribe to pub topic '%s': %s", pubTopic, err.Error())
-	}
-
 	// instantiate manager
 	return &IpfsManager{
-		PubTopic:    pubTopic,
 		shell:       sh,
-		pubsub:      sub,
 		nodeAPIAddr: ipfsURL,
 		keystore:    keystore,
 	}, nil
-}
-
-// Close shuts down the manager
-func (im *IpfsManager) Close() error {
-	return im.pubsub.Cancel()
 }
 
 // SetTimeout is used to set a timeout for our api client
@@ -112,22 +96,6 @@ func (im *IpfsManager) ParseLocalPinsForHash(hash string) (bool, error) {
 		return true, nil
 	}
 	return false, nil
-}
-
-// PublishPubSubMessage is used to publish a message to the given topic
-func (im *IpfsManager) PublishPubSubMessage(topic string, data string) error {
-	if topic == "" && data == "" {
-		return errors.New("invalid topic and data")
-	}
-	if err := im.shell.PubSubPublish(topic, data); err != nil {
-		return fmt.Errorf("error publishing data: %s", err.Error())
-	}
-	return nil
-}
-
-// GetNextRecord retrieves the next record from the PubSubSubscription
-func (im *IpfsManager) GetNextRecord() (*ipfsapi.Message, error) {
-	return im.pubsub.Next()
 }
 
 // BuildCustomRequest is used to build a custom request

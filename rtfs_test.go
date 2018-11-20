@@ -15,14 +15,14 @@ const (
 )
 
 func TestInitialize(t *testing.T) {
-	_, err := rtfs.NewManager("", nodeOneAPIAddr, nil)
+	_, err := rtfs.NewManager(nodeOneAPIAddr, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestDHTFindProvs(t *testing.T) {
-	im, err := rtfs.NewManager("", nodeOneAPIAddr, nil)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -33,7 +33,7 @@ func TestDHTFindProvs(t *testing.T) {
 }
 
 func TestBuildCustomRequest(t *testing.T) {
-	im, err := rtfs.NewManager("", nodeOneAPIAddr, nil)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -47,7 +47,7 @@ func TestBuildCustomRequest(t *testing.T) {
 }
 
 func TestPin(t *testing.T) {
-	im, err := rtfs.NewManager("", nodeOneAPIAddr, nil)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -71,7 +71,7 @@ func TestPin(t *testing.T) {
 }
 
 func TestGetObjectFileSizeInBytes(t *testing.T) {
-	im, err := rtfs.NewManager("", nodeOneAPIAddr, nil)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -83,24 +83,12 @@ func TestGetObjectFileSizeInBytes(t *testing.T) {
 }
 
 func TestObjectStat(t *testing.T) {
-	im, err := rtfs.NewManager("", nodeOneAPIAddr, nil)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 	_, err = im.ObjectStat(testPIN)
 	if err != nil {
-		t.Error(err)
-		return
-	}
-}
-
-func TestPubSub(t *testing.T) {
-	t.Skip("skipping broken test")
-	im, err := rtfs.NewManager("", nodeOneAPIAddr, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err = im.PublishPubSubMessage(im.PubTopic, "data"); err != nil {
 		t.Error(err)
 		return
 	}
