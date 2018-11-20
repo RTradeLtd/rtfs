@@ -13,20 +13,22 @@ import (
 
 // IpfsManager is our helper wrapper for IPFS
 type IpfsManager struct {
-	shell           *ipfsapi.Shell
-	PubSub          *ipfsapi.PubSubSubscription
-	KeystoreManager *KeystoreManager
-	KeystoreEnabled bool
-	PubTopic        string
-	nodeAPIAddr     string
+	PubSub *ipfsapi.PubSubSubscription
+
+	shell       *ipfsapi.Shell
+	keystore    *KeystoreManager
+	PubTopic    string
+	nodeAPIAddr string
 }
 
 // Initialize is used ot initialize our Ipfs manager struct
-func Initialize(pubTopic, connectionURL string) (*IpfsManager, error) {
+func Initialize(pubTopic, ipfsURL string, keystore *KeystoreManager) (*IpfsManager, error) {
 	manager := IpfsManager{
-		shell:       newShell(connectionURL),
-		PubTopic:    pubTopic,
-		nodeAPIAddr: connectionURL,
+		PubTopic: pubTopic,
+
+		shell:       newShell(ipfsURL),
+		nodeAPIAddr: ipfsURL,
+		keystore:    keystore,
 	}
 	manager.SetTimeout(time.Minute * 10)
 	_, err := manager.shell.ID()
@@ -48,24 +50,13 @@ func (im *IpfsManager) SetTimeout(time time.Duration) {
 	im.shell.SetTimeout(time)
 }
 
-// CreateKeystoreManager is used to create a key store manager for ipfs keys
-// for now it just uses a file system keystore manager
-func (im *IpfsManager) CreateKeystoreManager() error {
-	km, err := GenerateKeystoreManager()
-	if err != nil {
-		return err
-	}
-	im.KeystoreManager = km
-	im.KeystoreEnabled = true
-	return nil
-}
-
 // PublishToIPNSDetails is used for fine grained control over IPNS record publishing
 func (im *IpfsManager) PublishToIPNSDetails(contentHash, keyName string, lifetime, ttl time.Duration, resolve bool) (*ipfsapi.PublishResponse, error) {
-	if !im.KeystoreEnabled {
+	if im.keystore == nil {
 		return nil, errors.New("attempting to create ipns entry with dynamic keys keystore is not enabled/generated yet")
 	}
-	if keyPresent, err := im.KeystoreManager.CheckIfKeyExists(keyName); err != nil {
+
+	if keyPresent, err := im.keystore.CheckIfKeyExists(keyName); err != nil {
 		return nil, err
 	} else if !keyPresent {
 		return nil, errors.New("attempting to sign with non existent key")
