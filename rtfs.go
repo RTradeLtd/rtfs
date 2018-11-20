@@ -65,18 +65,13 @@ func (im *IpfsManager) PublishToIPNSDetails(contentHash, keyName string, lifetim
 	if !im.KeystoreEnabled {
 		return nil, errors.New("attempting to create ipns entry with dynamic keys keystore is not enabled/generated yet")
 	}
-	keyPresent, err := im.KeystoreManager.CheckIfKeyExists(keyName)
-	if err != nil {
+	if keyPresent, err := im.KeystoreManager.CheckIfKeyExists(keyName); err != nil {
 		return nil, err
-	}
-	if !keyPresent {
+	} else if !keyPresent {
 		return nil, errors.New("attempting to sign with non existent key")
 	}
-	resp, err := im.shell.PublishWithDetails(contentHash, keyName, lifetime, ttl, resolve)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+
+	return im.shell.PublishWithDetails(contentHash, keyName, lifetime, ttl, resolve)
 }
 
 // Pin is a wrapper method to pin a hash to the local node,
@@ -93,11 +88,7 @@ func (im *IpfsManager) Pin(hash string) error {
 // currently until https://github.com/ipfs/go-ipfs/issues/5376 it is added with no pin
 // thus a manual pin must be triggered afterwards
 func (im *IpfsManager) Add(r io.Reader) (string, error) {
-	hash, err := im.shell.AddNoPin(r)
-	if err != nil {
-		return "", err
-	}
-	return hash, nil
+	return im.shell.AddNoPin(r)
 }
 
 // GetObjectFileSizeInBytes is used to retrieve the cumulative byte size of an object
@@ -111,11 +102,7 @@ func (im *IpfsManager) GetObjectFileSizeInBytes(key string) (int, error) {
 
 // ObjectStat is used to retrieve the stats about an object
 func (im *IpfsManager) ObjectStat(key string) (*ipfsapi.ObjectStats, error) {
-	stat, err := im.shell.ObjectStat(key)
-	if err != nil {
-		return nil, err
-	}
-	return stat, nil
+	return im.shell.ObjectStat(key)
 }
 
 // ParseLocalPinsForHash checks whether or not a pin is present
@@ -124,9 +111,7 @@ func (im *IpfsManager) ParseLocalPinsForHash(hash string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	info := pins[hash]
-
-	if info.Type != "" {
+	if info := pins[hash]; info.Type != "" {
 		return true, nil
 	}
 	return false, nil
@@ -134,16 +119,13 @@ func (im *IpfsManager) ParseLocalPinsForHash(hash string) (bool, error) {
 
 // PublishPubSubMessage is used to publish a message to the given topic
 func (im *IpfsManager) PublishPubSubMessage(topic string, data string) error {
-	fmt.Println("publishing data")
 	if topic == "" && data == "" {
 		return errors.New("invalid topic and data")
 	}
 	err := im.shell.PubSubPublish(topic, data)
 	if err != nil {
-		fmt.Println("error publishing data ", err.Error())
-		return err
+		return fmt.Errorf("error publishing data: %s", err.Error())
 	}
-	fmt.Println("published data")
 	return nil
 }
 
