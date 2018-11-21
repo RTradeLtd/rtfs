@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"time"
 
@@ -72,6 +73,26 @@ func (im *IpfsManager) Add(r io.Reader) (string, error) {
 	return im.shell.AddNoPin(r)
 }
 
+// Cat is used to get cat an ipfs object
+func (im *IpfsManager) Cat(cid string, out interface{}) ([]byte, error) {
+	r, err := im.shell.Cat(cid)
+	if err != nil {
+		return nil, err
+	}
+	defer r.Close()
+	return ioutil.ReadAll(r)
+}
+
+// DagGet is used to get an ipld object
+func (im *IpfsManager) DagGet(cid string, out interface{}) error {
+	return im.shell.DagGet(cid, out)
+}
+
+// DagPut is used to store data as an ipld object
+func (im *IpfsManager) DagPut(data interface{}, encoding, kind string) (string, error) {
+	return im.shell.DagPut(data, encoding, kind)
+}
+
 // GetObjectFileSizeInBytes is used to retrieve the cumulative byte size of an object
 func (im *IpfsManager) GetObjectFileSizeInBytes(key string) (int, error) {
 	stat, err := im.shell.ObjectStat(key)
@@ -133,14 +154,4 @@ func (im *IpfsManager) DHTFindProvs(cid, numProviders string) error {
 		return err
 	}
 	return resp.Decode(&out)
-}
-
-// DagGet is used to get an ipld object
-func (im *IpfsManager) DagGet(cid string, out interface{}) error {
-	return im.shell.DagGet(cid, out)
-}
-
-// DagPut is used to store data as an ipld object
-func (im *IpfsManager) DagPut(data interface{}, encoding, kind string) (string, error) {
-	return im.shell.DagPut(data, encoding, kind)
 }
