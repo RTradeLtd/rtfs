@@ -3,6 +3,7 @@ package rtfs_test
 import (
 	"context"
 	"encoding/json"
+	"os"
 	"testing"
 	"time"
 
@@ -99,6 +100,32 @@ func TestDagPut(t *testing.T) {
 		t.Fatal(err)
 	}
 	if resp, err := im.DagPut(marshaled, "json", "cbor"); err != nil {
+		t.Fatal(err)
+	} else if resp == "" {
+		t.Fatal("unexpected error occured")
+	}
+}
+
+func TestNodeAddress(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if im.NodeAddress() != nodeOneAPIAddr {
+		t.Fatal("bad node address retrieved")
+	}
+}
+
+func TestAdd(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+	file, err := os.Open("./Makefile")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp, err := im.Add(file); err != nil {
 		t.Fatal(err)
 	} else if resp == "" {
 		t.Fatal("unexpected error occured")
