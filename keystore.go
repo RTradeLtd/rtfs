@@ -8,6 +8,9 @@ import (
 	ci "github.com/libp2p/go-libp2p-crypto"
 )
 
+// DefaultFSKeystorePath is the default path to an fs keystore
+var DefaultFSKeystorePath = "/ipfs/keystore"
+
 // KeystoreManager is howe we manipulat keys
 type KeystoreManager struct {
 	fs *keystore.FSKeystore

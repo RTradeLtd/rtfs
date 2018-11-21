@@ -12,27 +12,28 @@ import (
 
 // Manager provides functions for interacting with IPFS
 type Manager interface {
-	// SetTimeout is used to set a timeout for our api client
-	SetTimeout(time time.Duration)
-	// PublishToIPNSDetails is used for fine grained control over IPNS record publishing
-	PublishToIPNSDetails(contentHash, keyName string, lifetime, ttl time.Duration, resolve bool) (*ipfsapi.PublishResponse, error)
-	// Pin is a wrapper method to pin a hash to the local node,
-	// but also alert the rest of the local nodes to pin
-	// after which the pin will be sent to the cluster
-	Pin(hash string) error
+	// NodeAddress returns the node the manager is connected to
+	NodeAddress() string
 	// Add is a wrapper used to add a file to IPFS
 	// currently until https://github.com/ipfs/go-ipfs/issues/5376 it is added with no pin
 	// thus a manual pin must be triggered afterwards
 	Add(r io.Reader) (string, error)
-	// GetObjectFileSizeInBytes is used to retrieve the cumulative byte size of an object
-	GetObjectFileSizeInBytes(key string) (int, error)
-	// ObjectStat is used to retrieve the stats about an object
-	ObjectStat(key string) (*ipfsapi.ObjectStats, error)
-	// ParseLocalPinsForHash checks whether or not a pin is present
-	ParseLocalPinsForHash(hash string) (bool, error)
-	// BuildCustomRequest is used to build a custom request
-	BuildCustomRequest(ctx context.Context, url, commad string, opts map[string]string, args ...string) (*ipfsapi.Response, error)
-	// DHTFindProvs is used to find providers of a given CID
-	// Currently bugged and wil only fetch 1 provider
-	DHTFindProvs(cid, numProviders string) error
+	// DagPut is used to store data as an ipld object
+	DagPut(data interface{}, encoding, kind string) (string, error)
+	// DagGet is used to get an ipld object
+	DagGet(cid string, out interface{}) error
+	// Cat is used to get cat an ipfs object
+	Cat(cid string) ([]byte, error)
+	// Stat is used to retrieve the stats about an object
+	Stat(hash string) (*ipfsapi.ObjectStats, error)
+	// Pin is a wrapper method to pin a hash to the local node,
+	// but also alert the rest of the local nodes to pin
+	// after which the pin will be sent to the cluster
+	Pin(hash string) error
+	// CheckPin checks whether or not a pin is present
+	CheckPin(hash string) (bool, error)
+	// Publish is used for fine grained control over IPNS record publishing
+	Publish(contentHash, keyName string, lifetime, ttl time.Duration, resolve bool) (*ipfsapi.PublishResponse, error)
+	// CustomRequest is used to make a custom request
+	CustomRequest(ctx context.Context, url, commad string, opts map[string]string, args ...string) (*ipfsapi.Response, error)
 }
