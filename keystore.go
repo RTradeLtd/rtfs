@@ -87,7 +87,7 @@ func (km *KeystoreManager) CreateAndSaveKey(keyName string, keyType, bits int) (
 
 // ExportKeyToMnemonic is used to take an IPFS key, and return a human-readable friendly version.
 // The idea is to allow users to easily export the keys they create, allowing them to take control of their records (ipns, tns, etc..)
-func (km *KeystoreManager) ExportKeyToMnemonic(keyName string) (string, error) {
+func (km *KeystoreManager) ExportKeyAsMnemonic(keyName string) (string, error) {
 	pk, err := km.GetPrivateKeyByName(keyName)
 	if err != nil {
 		return "", err
