@@ -131,3 +131,27 @@ func TestAdd(t *testing.T) {
 		t.Fatal("unexpected error occured")
 	}
 }
+
+func TestPubSub_Success(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = im.PubSubPublish("topic", "data"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestPubSub_Failure(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// test topic failure
+	if err = im.PubSubPublish("", "data"); err == nil {
+		t.Fatal("failed to validate topic")
+	}
+	if err = im.PubSubPublish("topic", ""); err == nil {
+		t.Fatal("failed to validate data")
+	}
+}
