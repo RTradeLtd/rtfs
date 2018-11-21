@@ -127,3 +127,50 @@ func TestGetKey(t *testing.T) {
 
 	fmt.Printf("%+v\n", pk2.GetPublic())
 }
+
+func Blah(t *testing.T) {
+	defer func() {
+		if err := os.RemoveAll("temp"); err != nil {
+			t.Fatal(err)
+		}
+	}()
+	km, err := rtfs.NewKeystoreManager("temp")
+	if err != nil {
+		t.Fatal(err)
+	}
+	type args struct {
+		name    string
+		keyType int
+		size    int
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"EDKey-Success", args{"edkey1", ci.Ed25519, 256}},
+		{"RSAKey-Success", args{"rsakey1", ci.RSA, 2048}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			pk1, err := km.CreateAndSaveKey(
+				tt.args.name,
+				tt.args.keyType,
+				tt.args.size,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+			mnemonic, err := km.ExportKeyAsMnemonic(tt.args.name)
+			if err != nil {
+				t.Fatal(err)
+			}
+			pk2, err := rtfs.MnemonicToKey(mnemonic)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if valid := pk1.Equals(pk2); !valid {
+				t.Fatal("failed to properly recover key")
+			}
+		})
+	}
+}
