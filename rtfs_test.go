@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"testing"
+	"time"
 
 	"github.com/RTradeLtd/rtfs"
 )
@@ -16,29 +17,18 @@ const (
 )
 
 func TestInitialize(t *testing.T) {
-	_, err := rtfs.NewManager(nodeOneAPIAddr, nil)
+	_, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
-func TestDHTFindProvs(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, nil)
+func TestCustomRequest(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = im.DHTFindProvs("QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv", "10")
-	if err != nil {
-		t.Fatal(err)
-	}
-}
-
-func TestBuildCustomRequest(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	resp, err := im.BuildCustomRequest(context.Background(),
+	resp, err := im.CustomRequest(context.Background(),
 		nodeOneAPIAddr, "dht/findprovs", nil, "QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv")
 	if err != nil {
 		t.Error(err)
@@ -48,7 +38,7 @@ func TestBuildCustomRequest(t *testing.T) {
 }
 
 func TestPin(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, nil)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -60,7 +50,7 @@ func TestPin(t *testing.T) {
 	}
 
 	// check if pin was created
-	exists, err := im.ParseLocalPinsForHash(testPIN)
+	exists, err := im.CheckPin(testPIN)
 	if err != nil {
 		t.Error(err)
 		return
@@ -71,24 +61,12 @@ func TestPin(t *testing.T) {
 	}
 }
 
-func TestGetObjectFileSizeInBytes(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, nil)
+func TestStat(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, err = im.GetObjectFileSizeInBytes(testPIN)
-	if err != nil {
-		t.Error(err)
-		return
-	}
-}
-
-func TestObjectStat(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	_, err = im.ObjectStat(testPIN)
+	_, err = im.Stat(testPIN)
 	if err != nil {
 		t.Error(err)
 		return
@@ -96,7 +74,7 @@ func TestObjectStat(t *testing.T) {
 }
 
 func TestDagGet(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, nil)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -107,7 +85,7 @@ func TestDagGet(t *testing.T) {
 }
 
 func TestDagPut(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, nil)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
 	if err != nil {
 		t.Fatal(err)
 	}
