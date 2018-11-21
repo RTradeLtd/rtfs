@@ -108,6 +108,16 @@ func (im *IpfsManager) Publish(contentHash, keyName string, lifetime, ttl time.D
 	return im.shell.PublishWithDetails(contentHash, keyName, lifetime, ttl, resolve)
 }
 
+// PubSubPublish is used to publish a a message to the given topic
+func (im *IpfsManager) PubSubPublish(topic string, data string) error {
+	if topic == "" {
+		return errors.New("topic is empty")
+	} else if data == "" {
+		return errors.New("data is empty")
+	}
+	return im.shell.PubSubPublish(topic, data)
+}
+
 // CustomRequest is used to make a custom request
 func (im *IpfsManager) CustomRequest(ctx context.Context, url, commad string,
 	opts map[string]string, args ...string) (*ipfsapi.Response, error) {
