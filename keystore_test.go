@@ -164,7 +164,7 @@ func Blah(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			pk2, err := km.MnemonicToKey(mnemonic)
+			pk2, err := rtfs.MnemonicToKey(mnemonic)
 			if err != nil {
 				t.Fatal(err)
 			}
