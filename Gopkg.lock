@@ -3,6 +3,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:13077d94af7390c15eb9b9e85155e66236fde32a9ce82cea459606eb8a22545f"
+  name = "github.com/RTradeLtd/entropy-mnemonics"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "7b01a644a63680b90de22bacfb11d832e944eaab"
+
+[[projects]]
+  branch = "master"
   digest = "1:e99fcde135f6969c0c75d864f6b5eba692ec0f0630ea2a1bd82cfd887409120b"
   name = "github.com/RTradeLtd/go-ipfs-api"
   packages = ["."]
@@ -264,10 +272,26 @@
   pruneopts = "UT"
   revision = "ec83556a53fe16b65c452a104ea9d1e86a671852"
 
+[[projects]]
+  digest = "1:8029e9743749d4be5bc9f7d42ea1659471767860f0cdc34d37c3111bd308a295"
+  name = "golang.org/x/text"
+  packages = [
+    "internal/gen",
+    "internal/triegen",
+    "internal/ucd",
+    "transform",
+    "unicode/cldr",
+    "unicode/norm",
+  ]
+  pruneopts = "UT"
+  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
+  version = "v0.3.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/RTradeLtd/entropy-mnemonics",
     "github.com/RTradeLtd/go-ipfs-api",
     "github.com/ipfs/go-ipfs-keystore",
     "github.com/libp2p/go-libp2p-crypto",
