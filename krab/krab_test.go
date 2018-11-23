@@ -26,10 +26,10 @@ func TestKrab(t *testing.T) {
 		t.Fatal(err)
 	}
 	// this should fail
-	if has, err := km.Has(testKeyName); err != nil {
-		t.Fatal(err)
+	if has, err := km.Has(testKeyName); err == nil {
+		t.Fatal("key was found when it shouldn't have been")
 	} else if has {
-		t.Fatal("key found when no key was expected")
+		t.Fatal("unexpected error occured")
 	}
 	// create a key
 	pk, _, err := ci.GenerateKeyPair(ci.Ed25519, 256)
@@ -65,9 +65,9 @@ func TestKrab(t *testing.T) {
 		t.Fatal(err)
 	}
 	// verify key was deleted
-	if has, err := km.Has(testKeyName); err != nil {
-		t.Fatal(err)
+	if has, err := km.Has(testKeyName); err == nil {
+		t.Fatal("key was found when it shouldn't have been")
 	} else if has {
-		t.Fatal("key found when no key should've been found")
+		t.Fatal("unexpected error occured")
 	}
 }

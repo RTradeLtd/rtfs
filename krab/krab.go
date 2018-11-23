@@ -56,8 +56,8 @@ func (km *Krab) Put(name string, privKey ci.PrivKey) error {
 	if err := validateName(name); err != nil {
 		return err
 	}
-	if has, err := km.Has(name); err != nil {
-		return err
+	if has, err := km.Has(name); err == nil {
+		return errors.New(ErrKeyExists)
 	} else if has {
 		return errors.New(ErrKeyExists)
 	}
