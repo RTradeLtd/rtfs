@@ -21,7 +21,7 @@ func TestKrab(t *testing.T) {
 			t.Fatal(err)
 		}
 	}()
-	km, err := krab.NewKrab(passphrase, dsPath)
+	km, err := krab.NewKrab(krab.Opts{Passphrase: passphrase, DSPath: dsPath})
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -20,14 +20,20 @@ type Krab struct {
 	keystore.Keystore
 }
 
+// Opts is used to configure a Krab keystore
+type Opts struct {
+	Passphrase string
+	DSPath     string
+}
+
 // NewKrab is used to create a new krab ipfs keystore manager
-func NewKrab(passphrase, dspath string) (*Krab, error) {
-	ds, err := badger.NewDatastore(dspath, &badger.DefaultOptions)
+func NewKrab(opts Opts) (*Krab, error) {
+	ds, err := badger.NewDatastore(opts.DSPath, &badger.DefaultOptions)
 	if err != nil {
 		return nil, err
 	}
 	return &Krab{
-		em: crypto.NewEncryptManager(passphrase),
+		em: crypto.NewEncryptManager(opts.Passphrase),
 		ds: ds,
 	}, nil
 }
