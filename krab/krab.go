@@ -2,6 +2,7 @@ package krab
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 
 	"github.com/RTradeLtd/crypto"
@@ -42,7 +43,12 @@ func (km *Krab) Has(name string) (bool, error) {
 	if err := validateName(name); err != nil {
 		return false, err
 	}
-	return km.ds.Has(ds.NewKey(name))
+	if has, err := km.ds.Has(ds.NewKey(name)); err != nil {
+		return false, err
+	} else if !has {
+		return false, errors.New(ErrNoSuchKey)
+	}
+	return true, nil
 }
 
 // Put is used to store a key in our keystore
@@ -53,7 +59,7 @@ func (km *Krab) Put(name string, privKey ci.PrivKey) error {
 	if has, err := km.Has(name); err != nil {
 		return err
 	} else if has {
-		return ErrKeyExists
+		return errors.New(ErrKeyExists)
 	}
 	pkBytes, err := privKey.Bytes()
 	if err != nil {
@@ -76,7 +82,7 @@ func (km *Krab) Get(name string) (ci.PrivKey, error) {
 	if has, err := km.Has(name); err != nil {
 		return nil, err
 	} else if !has {
-		return nil, ErrNoSuchKey
+		return nil, errors.New(ErrNoSuchKey)
 	}
 	encryptedPKBytes, err := km.ds.Get(ds.NewKey(name))
 	if err != nil {
