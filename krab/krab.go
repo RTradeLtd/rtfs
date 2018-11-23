@@ -2,6 +2,7 @@ package krab
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 
 	"github.com/RTradeLtd/crypto"
@@ -22,7 +23,7 @@ type KeyManager struct {
 
 // NewKeyManager is used to create a new key manager
 func NewKeyManager(passphrase, dspath string) (*KeyManager, error) {
-	ds, err := badger.NewDatastore(dspath, &badger.Options{})
+	ds, err := badger.NewDatastore(dspath, &badger.DefaultOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -39,6 +40,11 @@ func (km *KeyManager) Has(name string) (bool, error) {
 
 // Put is used to store a key in our keystore
 func (km *KeyManager) Put(name string, privKey ci.PrivKey) error {
+	if has, err := km.Has(name); err != nil {
+		return err
+	} else if has {
+		return errors.New("key with name already exists")
+	}
 	pkBytes, err := privKey.Bytes()
 	if err != nil {
 		return err
