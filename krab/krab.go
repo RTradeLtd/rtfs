@@ -54,7 +54,16 @@ func (km *KeyManager) Put(name string, privKey ci.PrivKey) error {
 
 // Get is used to retrieve a key from our keystore
 func (km *KeyManager) Get(name string) (ci.PrivKey, error) {
-	return nil, nil
+	encryptedPKBytes, err := km.ds.Get(ds.NewKey(name))
+	if err != nil {
+		return nil, err
+	}
+	reader := bytes.NewReader(encryptedPKBytes)
+	pkBytes, err := km.em.Decrypt(reader)
+	if err != nil {
+		return nil, err
+	}
+	return ci.UnmarshalPrivateKey(pkBytes)
 }
 
 // Delete is used to remove a key from our keystore
