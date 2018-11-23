@@ -3,6 +3,30 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:b02e5e3f836f077a3249d1dfe3c57d305e007f71a98f2e69c170a2dd8d2b266c"
+  name = "github.com/AndreasBriese/bbloom"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "343706a395b76e5ca5c7dca46a5d937b48febc74"
+
+[[projects]]
+  branch = "master"
+  digest = "1:4a7be34ac4d3c56c039ece7d674236bde2d95f6adc93262cbb21d5b758566b15"
+  name = "github.com/Kubuxu/go-os-helper"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "3d3fc2fb493d8d889dddd5a4524283ac2faa4732"
+
+[[projects]]
+  digest = "1:74776aa7694040c8af4c20a59e654c8c685d64cb361eb1386632664cdcfecaa2"
+  name = "github.com/RTradeLtd/crypto"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "b12095f9d32129596d8648e13efb3b537fea1b2c"
+  version = "v1.0.0"
+
+[[projects]]
+  branch = "master"
   digest = "1:13077d94af7390c15eb9b9e85155e66236fde32a9ce82cea459606eb8a22545f"
   name = "github.com/RTradeLtd/entropy-mnemonics"
   packages = ["."]
@@ -38,6 +62,29 @@
   revision = "67e573d211ace594f1366b4ce9d39726c4b19bd0"
 
 [[projects]]
+  digest = "1:5f5090f05382959db941fa45acbeb7f4c5241aa8ac0f8f4393dec696e5953f53"
+  name = "github.com/dgraph-io/badger"
+  packages = [
+    ".",
+    "options",
+    "protos",
+    "skl",
+    "table",
+    "y",
+  ]
+  pruneopts = "UT"
+  revision = "99233d725dbdd26d156c61b2f42ae1671b794656"
+  version = "v1.5.4"
+
+[[projects]]
+  branch = "master"
+  digest = "1:8583eab935e3d99d3a7ac489cd2ee7c8e95eecd7c64ab1fc8382746dacaf8563"
+  name = "github.com/dgryski/go-farm"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "2de33835d10275975374b37b2dcfd22c9020a1f5"
+
+[[projects]]
   digest = "1:bbadccf3d3317ea03c0dac0b45b673b4b397c8f91a1d2eff550a3c51c4ad770e"
   name = "github.com/gogo/protobuf"
   packages = ["proto"]
@@ -46,12 +93,47 @@
   version = "v1.1.1"
 
 [[projects]]
+  digest = "1:97df918963298c287643883209a2c3f642e6593379f97ab400c2a2e219ab647d"
+  name = "github.com/golang/protobuf"
+  packages = ["proto"]
+  pruneopts = "UT"
+  revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
+  version = "v1.2.0"
+
+[[projects]]
+  digest = "1:236d7e1bdb50d8f68559af37dbcf9d142d56b431c9b2176d41e2a009b664cda8"
+  name = "github.com/google/uuid"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "9b3b1e0f5f99ae461456d768e7d301a7acdaa2d8"
+  version = "v1.1.0"
+
+[[projects]]
   branch = "master"
   digest = "1:e3ddd1f59d3c84917c99ecb1c3420aa6899f6df7495ba9414c13732b2e9568dd"
   name = "github.com/gxed/hashland"
   packages = ["keccakpg"]
   pruneopts = "UT"
   revision = "d9f6b97f8db22dd1e090fd0bbbe98f09cc7dd0a8"
+
+[[projects]]
+  digest = "1:35755bdc0c3264b46b2d4451a40ba0ce60c03608d390c9a1a4d3b54b82ac9bd4"
+  name = "github.com/ipfs/go-datastore"
+  packages = [
+    ".",
+    "query",
+  ]
+  pruneopts = "UT"
+  revision = "5accf38b689df4e06a973bb70cc678f798d691c0"
+  version = "v3.2.0"
+
+[[projects]]
+  digest = "1:58ecb6a43abe64b279860e389fecedafe3a2483d562066b6cd0021c2cf66d7c0"
+  name = "github.com/ipfs/go-ds-badger"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "a7965b08c06faf12cae93f20913c1237dce1b5cc"
+  version = "v1.7.0"
 
 [[projects]]
   branch = "master"
@@ -81,6 +163,14 @@
   pruneopts = "UT"
   revision = "14e95105cbafcda64fdc36197fe6a30b23c693dc"
   version = "v1.5.7"
+
+[[projects]]
+  branch = "master"
+  digest = "1:d4f705e1c80842d93039d360b5f240099c2c9f835daa8d32dc3e899fbd8ff2b4"
+  name = "github.com/jbenet/goprocess"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "b497e2f366b8624394fb2e89c10ab607bebdde0b"
 
 [[projects]]
   digest = "1:19f2d2506cc0f9a233c9c0753e8c3fd5afa88afb43ff7b795cbba3629d0e96b5"
@@ -243,10 +333,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:f8974feab547e330cb0b0e4296740f12c5886c9da973014cfea8336eed971a47"
+  digest = "1:eba193b7fbcbdfbed3734f6c351badf806f6856d0e9cf1e5d486b3b14043bb2d"
   name = "golang.org/x/crypto"
   packages = [
     "blake2s",
+    "pbkdf2",
     "sha3",
   ]
   pruneopts = "UT"
@@ -254,9 +345,13 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:76ee51c3f468493aff39dbacc401e8831fbb765104cbf613b89bef01cf4bad70"
+  digest = "1:370d49f91099ce70df877098123f6b59b1c1e54770b3443da352fab7bca01f8b"
   name = "golang.org/x/net"
-  packages = ["context"]
+  packages = [
+    "context",
+    "internal/timeseries",
+    "trace",
+  ]
   pruneopts = "UT"
   revision = "adae6a3d119ae4890b46832a2e88a95adc62b8e7"
 
@@ -291,8 +386,12 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/RTradeLtd/crypto",
     "github.com/RTradeLtd/entropy-mnemonics",
     "github.com/RTradeLtd/go-ipfs-api",
+    "github.com/ipfs/go-datastore",
+    "github.com/ipfs/go-datastore/query",
+    "github.com/ipfs/go-ds-badger",
     "github.com/ipfs/go-ipfs-keystore",
     "github.com/libp2p/go-libp2p-crypto",
   ]
