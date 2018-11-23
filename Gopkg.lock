@@ -394,6 +394,7 @@
     "github.com/ipfs/go-ds-badger",
     "github.com/ipfs/go-ipfs-keystore",
     "github.com/libp2p/go-libp2p-crypto",
+    "github.com/pkg/errors",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
