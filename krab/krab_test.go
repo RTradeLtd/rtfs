@@ -47,8 +47,10 @@ func TestKrab(t *testing.T) {
 		t.Fatal("key not present when it should be")
 	}
 	// get the key
-	if _, err := km.Get(testKeyName); err != nil {
+	if pk, err := km.Get(testKeyName); err != nil {
 		t.Fatal(err)
+	} else if pk == nil {
+		t.Fatal("empty private key, unexpected error occured")
 	}
 	// test key list
 	if list, err := km.List(); err != nil {
