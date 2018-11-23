@@ -40,11 +40,17 @@ func NewKrab(opts Opts) (*Krab, error) {
 
 // Has is used to check whether or not the given key name exists
 func (km *Krab) Has(name string) (bool, error) {
+	if err := validateName(name); err != nil {
+		return false, err
+	}
 	return km.ds.Has(ds.NewKey(name))
 }
 
 // Put is used to store a key in our keystore
 func (km *Krab) Put(name string, privKey ci.PrivKey) error {
+	if err := validateName(name); err != nil {
+		return err
+	}
 	if has, err := km.Has(name); err != nil {
 		return err
 	} else if has {
@@ -65,6 +71,9 @@ func (km *Krab) Put(name string, privKey ci.PrivKey) error {
 
 // Get is used to retrieve a key from our keystore
 func (km *Krab) Get(name string) (ci.PrivKey, error) {
+	if err := validateName(name); err != nil {
+		return nil, err
+	}
 	encryptedPKBytes, err := km.ds.Get(ds.NewKey(name))
 	if err != nil {
 		return nil, err
@@ -79,6 +88,9 @@ func (km *Krab) Get(name string) (ci.PrivKey, error) {
 
 // Delete is used to remove a key from our keystore
 func (km *Krab) Delete(name string) error {
+	if err := validateName(name); err != nil {
+		return err
+	}
 	return km.ds.Delete(ds.NewKey(name))
 }
 
