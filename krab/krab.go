@@ -13,33 +13,32 @@ import (
 	ci "github.com/libp2p/go-libp2p-crypto"
 )
 
-// KeyManager is used to manage an encrypted IPFS keystore
-type KeyManager struct {
-	// Pass is used to handle encryption of keys within the datastore
+// Krab is used to manage an encrypted IPFS keystore
+type Krab struct {
 	em *crypto.EncryptManager
 	ds *badger.Datastore
 	keystore.Keystore
 }
 
-// NewKeyManager is used to create a new key manager
-func NewKeyManager(passphrase, dspath string) (*KeyManager, error) {
+// NewKrab is used to create a new krab ipfs keystore manager
+func NewKrab(passphrase, dspath string) (*Krab, error) {
 	ds, err := badger.NewDatastore(dspath, &badger.DefaultOptions)
 	if err != nil {
 		return nil, err
 	}
-	return &KeyManager{
+	return &Krab{
 		em: crypto.NewEncryptManager(passphrase),
 		ds: ds,
 	}, nil
 }
 
 // Has is used to check whether or not the given key name exists
-func (km *KeyManager) Has(name string) (bool, error) {
+func (km *Krab) Has(name string) (bool, error) {
 	return km.ds.Has(ds.NewKey(name))
 }
 
 // Put is used to store a key in our keystore
-func (km *KeyManager) Put(name string, privKey ci.PrivKey) error {
+func (km *Krab) Put(name string, privKey ci.PrivKey) error {
 	if has, err := km.Has(name); err != nil {
 		return err
 	} else if has {
@@ -59,7 +58,7 @@ func (km *KeyManager) Put(name string, privKey ci.PrivKey) error {
 }
 
 // Get is used to retrieve a key from our keystore
-func (km *KeyManager) Get(name string) (ci.PrivKey, error) {
+func (km *Krab) Get(name string) (ci.PrivKey, error) {
 	encryptedPKBytes, err := km.ds.Get(ds.NewKey(name))
 	if err != nil {
 		return nil, err
@@ -73,12 +72,12 @@ func (km *KeyManager) Get(name string) (ci.PrivKey, error) {
 }
 
 // Delete is used to remove a key from our keystore
-func (km *KeyManager) Delete(name string) error {
+func (km *Krab) Delete(name string) error {
 	return km.ds.Delete(ds.NewKey(name))
 }
 
 // List is used to list all key identifiers in our keystore
-func (km *KeyManager) List() ([]string, error) {
+func (km *Krab) List() ([]string, error) {
 	entries, err := km.ds.Query(query.Query{})
 	if err != nil {
 		return nil, err

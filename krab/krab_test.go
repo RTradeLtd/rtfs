@@ -21,7 +21,7 @@ func TestKrab(t *testing.T) {
 			t.Fatal(err)
 		}
 	}()
-	km, err := krab.NewKeyManager(passphrase, dsPath)
+	km, err := krab.NewKrab(passphrase, dsPath)
 	if err != nil {
 		t.Fatal(err)
 	}
