@@ -2,7 +2,6 @@ package krab
 
 import (
 	"bytes"
-	"errors"
 	"strings"
 
 	"github.com/RTradeLtd/crypto"
@@ -54,7 +53,7 @@ func (km *Krab) Put(name string, privKey ci.PrivKey) error {
 	if has, err := km.Has(name); err != nil {
 		return err
 	} else if has {
-		return errors.New("key with name already exists")
+		return ErrKeyExists
 	}
 	pkBytes, err := privKey.Bytes()
 	if err != nil {
@@ -73,6 +72,11 @@ func (km *Krab) Put(name string, privKey ci.PrivKey) error {
 func (km *Krab) Get(name string) (ci.PrivKey, error) {
 	if err := validateName(name); err != nil {
 		return nil, err
+	}
+	if has, err := km.Has(name); err != nil {
+		return nil, err
+	} else if !has {
+		return nil, ErrNoSuchKey
 	}
 	encryptedPKBytes, err := km.ds.Get(ds.NewKey(name))
 	if err != nil {
