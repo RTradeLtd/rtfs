@@ -5,7 +5,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/RTradeLtd/config"
 	"github.com/RTradeLtd/rtfs"
 )
 
@@ -16,12 +15,12 @@ type Laser struct {
 }
 
 // NewLaser creates a laser client to beam content between different ipfs networks
-func NewLaser(net1Cfg, net2Cfg config.IPFS) (*Laser, error) {
-	net1, err := rtfs.NewManager(net1Cfg.APIConnection.Host+":"+net1Cfg.APIConnection.Port, nil, time.Minute*10)
+func NewLaser(net1URL, net2URL string) (*Laser, error) {
+	net1, err := rtfs.NewManager(net1URL, nil, time.Minute*10)
 	if err != nil {
 		return nil, err
 	}
-	net2, err := rtfs.NewManager(net2Cfg.APIConnection.Host+":"+net2Cfg.APIConnection.Port, nil, time.Minute*10)
+	net2, err := rtfs.NewManager(net2URL, nil, time.Minute*10)
 	if err != nil {
 		return nil, err
 	}
