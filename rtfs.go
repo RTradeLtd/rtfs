@@ -10,7 +10,7 @@ import (
 	"time"
 
 	ipfsapi "github.com/RTradeLtd/go-ipfs-api"
-	"github.com/RTradeLtd/go-ipfs/keystore"
+	"github.com/ipfs/go-ipfs/keystore"
 )
 
 // IpfsManager is our helper wrapper for IPFS
