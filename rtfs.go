@@ -9,20 +9,18 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/RTradeLtd/rtfs/krab"
-
 	ipfsapi "github.com/RTradeLtd/go-ipfs-api"
 )
 
 // IpfsManager is our helper wrapper for IPFS
 type IpfsManager struct {
 	shell       *ipfsapi.Shell
-	keystore    *krab.Krab
+	keystore    *KeystoreManager
 	nodeAPIAddr string
 }
 
 // NewManager is used to initialize our Ipfs manager struct
-func NewManager(ipfsURL string, keystore *krab.Krab, timeout time.Duration) (*IpfsManager, error) {
+func NewManager(ipfsURL string, keystore *KeystoreManager, timeout time.Duration) (*IpfsManager, error) {
 	// set up shell
 	sh := newShell(ipfsURL)
 	sh.SetTimeout(time.Minute * 5)
@@ -101,7 +99,7 @@ func (im *IpfsManager) Publish(contentHash, keyName string, lifetime, ttl time.D
 		return nil, errors.New("attempting to create ipns entry with dynamic keys keystore is not enabled/generated yet")
 	}
 
-	if keyPresent, err := im.keystore.Has(keyName); err != nil {
+	if keyPresent, err := im.keystore.CheckIfKeyExists(keyName); err != nil {
 		return nil, err
 	} else if !keyPresent {
 		return nil, errors.New("attempting to sign with non existent key")
