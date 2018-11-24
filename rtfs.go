@@ -9,19 +9,20 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/RTradeLtd/rtfs/krab"
+
 	ipfsapi "github.com/RTradeLtd/go-ipfs-api"
-	"github.com/ipfs/go-ipfs/keystore"
 )
 
 // IpfsManager is our helper wrapper for IPFS
 type IpfsManager struct {
 	shell       *ipfsapi.Shell
-	keystore    keystore.Keystore
+	keystore    *krab.Krab
 	nodeAPIAddr string
 }
 
 // NewManager is used to initialize our Ipfs manager struct
-func NewManager(ipfsURL string, keystore keystore.Keystore, timeout time.Duration) (*IpfsManager, error) {
+func NewManager(ipfsURL string, keystore *krab.Krab, timeout time.Duration) (*IpfsManager, error) {
 	// set up shell
 	sh := newShell(ipfsURL)
 	sh.SetTimeout(time.Minute * 5)
