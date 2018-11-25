@@ -84,6 +84,9 @@ func TestGetKey(t *testing.T) {
 		k2 = "test1"
 	)
 	kb, err := krab.NewKrab(krab.Opts{Passphrase: "password123", DSPath: "temp"})
+	if err != nil {
+		t.Fatal(err)
+	}
 	km, err := rtfs.NewKeystoreManager(kb)
 	if err != nil {
 		t.Fatal(err)
