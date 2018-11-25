@@ -7,13 +7,11 @@ import (
 	"os"
 	"testing"
 
+	"github.com/RTradeLtd/rtfs/krab"
+
 	"github.com/RTradeLtd/rtfs"
 	ci "github.com/libp2p/go-libp2p-crypto"
 )
-
-func TestKeystoreManager_noCustomPath(t *testing.T) {
-	rtfs.NewKeystoreManager()
-}
 
 func TestKeystoreManager(t *testing.T) {
 	defer func() {
@@ -21,8 +19,8 @@ func TestKeystoreManager(t *testing.T) {
 			t.Fatal(err)
 		}
 	}()
-
-	km, err := rtfs.NewKeystoreManager("temp")
+	kb, err := krab.NewKrab(krab.Opts{Passphrase: "password123", DSPath: "temp"})
+	km, err := rtfs.NewKeystoreManager(kb)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -49,8 +47,8 @@ func TestKeystoreManager(t *testing.T) {
 	}
 
 	present, err := km.CheckIfKeyExists("thiskeyshouldreallynotexistwithsucharandomname")
-	if err != nil {
-		t.Fatal(err)
+	if err == nil {
+		t.Fatal("no error, key was found when it shouldn't have been")
 	}
 	if present {
 		t.Fatal("key found when it should'nt have been")
@@ -85,26 +83,25 @@ func TestGetKey(t *testing.T) {
 		k1 = "b6ec4a647a7738ef8eea3b21777ecf41630d6d0ac79dc36739d81e927f910a65"
 		k2 = "test1"
 	)
-
-	km, err := rtfs.NewKeystoreManager("temp")
+	kb, err := krab.NewKrab(krab.Opts{Passphrase: "password123", DSPath: "temp"})
 	if err != nil {
 		t.Fatal(err)
 	}
-
+	km, err := rtfs.NewKeystoreManager(kb)
+	if err != nil {
+		t.Fatal(err)
+	}
 	// Create keys
 	km.CreateAndSaveKey(k1, 1, 1)
 	km.CreateAndSaveKey(k2, 1, 1)
-
 	// Check if keys exist
 	present, err := km.CheckIfKeyExists(k1)
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	if !present {
 		t.Error("key not present when it should be")
 	}
-
 	pk1, err := km.GetPrivateKeyByName(k1)
 	if err != nil {
 		t.Fatal(err)
@@ -134,7 +131,8 @@ func Blah(t *testing.T) {
 			t.Fatal(err)
 		}
 	}()
-	km, err := rtfs.NewKeystoreManager("temp")
+	kb, err := krab.NewKrab(krab.Opts{Passphrase: "password123", DSPath: "temp"})
+	km, err := rtfs.NewKeystoreManager(kb)
 	if err != nil {
 		t.Fatal(err)
 	}

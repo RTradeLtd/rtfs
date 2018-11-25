@@ -9,7 +9,6 @@ import (
 	ds "github.com/ipfs/go-datastore"
 	"github.com/ipfs/go-datastore/query"
 	badger "github.com/ipfs/go-ds-badger"
-	"github.com/ipfs/go-ipfs-keystore"
 	ci "github.com/libp2p/go-libp2p-crypto"
 )
 
@@ -17,7 +16,6 @@ import (
 type Krab struct {
 	em *crypto.EncryptManager
 	ds *badger.Datastore
-	keystore.Keystore
 }
 
 // Opts is used to configure a Krab keystore
