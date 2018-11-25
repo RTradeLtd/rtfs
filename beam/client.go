@@ -40,14 +40,13 @@ func (l *Laser) BeamFrom(source bool, contentHash string) error {
 			return err
 		}
 		return nil
-	} else {
-		data, err := l.dst.Cat(contentHash)
-		if err != nil {
-			return err
-		}
-		if _, err = l.src.Add(bytes.NewReader(data)); err != nil {
-			return err
-		}
-		return nil
 	}
+	data, err := l.dst.Cat(contentHash)
+	if err != nil {
+		return err
+	}
+	if _, err = l.src.Add(bytes.NewReader(data)); err != nil {
+		return err
+	}
+	return nil
 }
