@@ -29,18 +29,20 @@ func NewLaser(srcURL, dstURL string) (*Laser, error) {
 	}, nil
 }
 
-// BeamFrom is used to transfer content bewween two different network
-func (l *Laser) BeamFrom(source bool, contentHash string) error {
-	if source {
-		data, err := l.src.Cat(contentHash)
-		if err != nil {
-			return err
-		}
-		if _, err = l.dst.Add(bytes.NewReader(data)); err != nil {
-			return err
-		}
-		return nil
+// BeamFromSource is used to transfer content from the source network to the destination network
+func (l *Laser) BeamFromSource(contentHash string) error {
+	data, err := l.src.Cat(contentHash)
+	if err != nil {
+		return err
 	}
+	if _, err = l.dst.Add(bytes.NewReader(data)); err != nil {
+		return err
+	}
+	return nil
+}
+
+// BeamFromDestination is used to transfer content from the destination network to the source network
+func (l *Laser) BeamFromDestination(contentHash string) error {
 	data, err := l.dst.Cat(contentHash)
 	if err != nil {
 		return err
