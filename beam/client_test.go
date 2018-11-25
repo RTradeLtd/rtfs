@@ -31,9 +31,10 @@ func TestBeam(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for i := 1; i <= 2; i++ {
-		if err = laser.Beam(i, cid); err != nil {
-			t.Fatal(err)
-		}
+	if err = laser.BeamFrom(false, cid); err != nil {
+		t.Fatal(err)
+	}
+	if err = laser.BeamFrom(true, cid); err != nil {
+		t.Fatal(err)
 	}
 }
