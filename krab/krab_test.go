@@ -21,10 +21,11 @@ func TestKrab(t *testing.T) {
 			t.Fatal(err)
 		}
 	}()
-	km, err := krab.NewKrab(krab.Opts{Passphrase: passphrase, DSPath: dsPath})
+	km, err := krab.NewKrab(krab.Opts{Passphrase: passphrase, DSPath: dsPath, ReadOnly: false})
 	if err != nil {
 		t.Fatal(err)
 	}
+	defer km.Close()
 	// this should fail
 	if has, err := km.Has(testKeyName); err == nil {
 		t.Fatal("key was found when it shouldn't have been")
