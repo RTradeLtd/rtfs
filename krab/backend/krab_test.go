@@ -1,4 +1,4 @@
-package krab_test
+package backend_test
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 
 	"github.com/RTradeLtd/config"
 	pb "github.com/RTradeLtd/grpc/krab"
-	"github.com/RTradeLtd/rtfs/krab/backend/krab"
+	"github.com/RTradeLtd/rtfs/krab/backend"
 	ci "github.com/libp2p/go-libp2p-crypto"
 )
 
@@ -22,12 +22,12 @@ func TestKrab(t *testing.T) {
 	}
 	// create our server, and listen for connections
 	go func() {
-		if err := krab.NewServer(cfg.Krab.URL, "tcp", cfg); err != nil {
+		if err := backend.NewServer(cfg.Krab.URL, "tcp", cfg); err != nil {
 			t.Fatal(err)
 		}
 	}()
 	// create our client to connect to the server
-	client, err := krab.NewClient(cfg.Endpoints)
+	client, err := backend.NewClient(cfg.Endpoints)
 	if err != nil {
 		t.Fatal(err)
 	}

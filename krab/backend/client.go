@@ -1,5 +1,5 @@
-// Package krab provides a client for interacting with the krab server
-package krab
+// Package backend provides a service for krab
+package backend
 
 import (
 	"fmt"

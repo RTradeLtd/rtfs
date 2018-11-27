@@ -1,5 +1,5 @@
-// Package krab provides a microservice to handle ipfs key management
-package krab
+// Package backend provides a service for krab
+package backend
 
 import (
 	"context"
