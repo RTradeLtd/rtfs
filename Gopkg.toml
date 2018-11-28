@@ -11,10 +11,6 @@
   version = "v1.0.15"
 
 [[constraint]]
-  name = "github.com/RTradeLtd/grpc"
-  version = "v1.0.6"
-
-[[constraint]]
   name = "github.com/libp2p/go-libp2p-crypto"
   version = "2.0.1"
 
