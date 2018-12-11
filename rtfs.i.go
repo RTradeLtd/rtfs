@@ -15,8 +15,6 @@ type Manager interface {
 	// NodeAddress returns the node the manager is connected to
 	NodeAddress() string
 	// Add is a wrapper used to add a file to IPFS
-	// currently until https://github.com/ipfs/go-ipfs/issues/5376 it is added with no pin
-	// thus a manual pin must be triggered afterwards
 	Add(r io.Reader) (string, error)
 	// DagPut is used to store data as an ipld object
 	DagPut(data interface{}, encoding, kind string) (string, error)
@@ -26,6 +24,16 @@ type Manager interface {
 	Cat(cid string) ([]byte, error)
 	// Stat is used to retrieve the stats about an object
 	Stat(hash string) (*ipfsapi.ObjectStats, error)
+	// Patch allows for patching of various objects together
+	Patch(root, action string, args ...string) (string, error)
+	// PatchLink is used to link two objects together
+	// create is used to specify whether intermediary nodes should be generated
+	PatchLink(root, path, childHash string, create bool) (string, error)
+	// AppendData is used to modify the raw data within an object, to a max of 1MB
+	// Anything larger than 1MB will not be respected by the rest of the network
+	AppendData(root string, data interface{}) (string, error)
+	// SetData is used to set the data field of an ipfs object
+	SetData(root string, data interface{}) (string, error)
 	// Pin is a wrapper method to pin a hash to the local node,
 	// but also alert the rest of the local nodes to pin
 	// after which the pin will be sent to the cluster
@@ -38,4 +46,6 @@ type Manager interface {
 	PubSubPublish(topic string, data string) error
 	// CustomRequest is used to make a custom request
 	CustomRequest(ctx context.Context, url, commad string, opts map[string]string, args ...string) (*ipfsapi.Response, error)
+	// SwarmConnect is use to open a connection a one or more ipfs nodes
+	SwarmConnect(addrs ...string) error
 }

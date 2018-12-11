@@ -40,10 +40,8 @@ func NewManager(ipfsURL string, keystore *KeystoreManager, timeout time.Duration
 func (im *IpfsManager) NodeAddress() string { return im.nodeAPIAddr }
 
 // Add is a wrapper used to add a file to IPFS
-// currently until https://github.com/ipfs/go-ipfs/issues/5376 it is added with no pin
-// thus a manual pin must be triggered afterwards
 func (im *IpfsManager) Add(r io.Reader) (string, error) {
-	return im.shell.AddNoPin(r)
+	return im.shell.Add(r)
 }
 
 // DagPut is used to store data as an ipld object
@@ -69,6 +67,28 @@ func (im *IpfsManager) Cat(cid string) ([]byte, error) {
 // Stat is used to retrieve the stats about an object
 func (im *IpfsManager) Stat(hash string) (*ipfsapi.ObjectStats, error) {
 	return im.shell.ObjectStat(hash)
+}
+
+// Patch allows for patching of various objects together
+func (im *IpfsManager) Patch(root, action string, args ...string) (string, error) {
+	return im.shell.Patch(root, action, args...)
+}
+
+// PatchLink is used to link two objects together
+// create is used to specify whether intermediary nodes should be generated
+func (im *IpfsManager) PatchLink(root, path, childHash string, create bool) (string, error) {
+	return im.shell.PatchLink(root, path, childHash, create)
+}
+
+// AppendData is used to modify the raw data within an object, to a max of 1MB
+// Anything larger than 1MB will not be respected by the rest of the network
+func (im *IpfsManager) AppendData(root string, data interface{}) (string, error) {
+	return im.shell.PatchData(root, false, data)
+}
+
+// SetData is used to set the data field of an ipfs object
+func (im *IpfsManager) SetData(root string, data interface{}) (string, error) {
+	return im.shell.PatchData(root, true, data)
 }
 
 // Pin is a wrapper method to pin a hash to the local node,
@@ -136,4 +156,9 @@ func (im *IpfsManager) CustomRequest(ctx context.Context, url, commad string,
 	}
 
 	return resp, nil
+}
+
+// SwarmConnect is use to open a connection a one or more ipfs nodes
+func (im *IpfsManager) SwarmConnect(addrs ...string) error {
+	return im.shell.SwarmConnect(context.Background(), addrs...)
 }
