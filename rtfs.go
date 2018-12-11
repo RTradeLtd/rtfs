@@ -88,8 +88,8 @@ func (im *IpfsManager) SetData(root string, data interface{}) (string, error) {
 }
 
 // NewObject is used to create a generic object from a template type
-func (im *IpfsManager) NewObject(template ...string) (string, error) {
-	return im.shell.NewObject(template[0])
+func (im *IpfsManager) NewObject(template string) (string, error) {
+	return im.shell.NewObject(template)
 }
 
 // Pin is a wrapper method to pin a hash.

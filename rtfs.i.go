@@ -34,7 +34,7 @@ type Manager interface {
 	// SetData is used to set the data field of an ipfs object
 	SetData(root string, data interface{}) (string, error)
 	// NewObject is used to create a generic object from a template type
-	NewObject(template ...string) (string, error)
+	NewObject(template string) (string, error)
 	// Pin is a wrapper method to pin a hash.
 	// pinning prevents GC and persistently stores on disk
 	Pin(hash string) error
