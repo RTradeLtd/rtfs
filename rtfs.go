@@ -69,12 +69,8 @@ func (im *IpfsManager) Stat(hash string) (*ipfsapi.ObjectStats, error) {
 	return im.shell.ObjectStat(hash)
 }
 
-// Patch allows for patching of various objects together
-func (im *IpfsManager) Patch(root, action string, args ...string) (string, error) {
-	return im.shell.Patch(root, action, args...)
-}
-
 // PatchLink is used to link two objects together
+// path really means the name of the link
 // create is used to specify whether intermediary nodes should be generated
 func (im *IpfsManager) PatchLink(root, path, childHash string, create bool) (string, error) {
 	return im.shell.PatchLink(root, path, childHash, create)
@@ -91,9 +87,13 @@ func (im *IpfsManager) SetData(root string, data interface{}) (string, error) {
 	return im.shell.PatchData(root, true, data)
 }
 
-// Pin is a wrapper method to pin a hash to the local node,
-// but also alert the rest of the local nodes to pin
-// after which the pin will be sent to the cluster
+// NewObject is used to create a generic object from a template type
+func (im *IpfsManager) NewObject(template ...string) (string, error) {
+	return im.shell.NewObject(template[0])
+}
+
+// Pin is a wrapper method to pin a hash.
+// pinning prevents GC and persistently stores on disk
 func (im *IpfsManager) Pin(hash string) error {
 	if err := im.shell.Pin(hash); err != nil {
 		return fmt.Errorf("failed to pin '%s': %s", hash, err.Error())

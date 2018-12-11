@@ -24,9 +24,8 @@ type Manager interface {
 	Cat(cid string) ([]byte, error)
 	// Stat is used to retrieve the stats about an object
 	Stat(hash string) (*ipfsapi.ObjectStats, error)
-	// Patch allows for patching of various objects together
-	Patch(root, action string, args ...string) (string, error)
 	// PatchLink is used to link two objects together
+	// path really means the name of the link
 	// create is used to specify whether intermediary nodes should be generated
 	PatchLink(root, path, childHash string, create bool) (string, error)
 	// AppendData is used to modify the raw data within an object, to a max of 1MB
@@ -34,9 +33,10 @@ type Manager interface {
 	AppendData(root string, data interface{}) (string, error)
 	// SetData is used to set the data field of an ipfs object
 	SetData(root string, data interface{}) (string, error)
-	// Pin is a wrapper method to pin a hash to the local node,
-	// but also alert the rest of the local nodes to pin
-	// after which the pin will be sent to the cluster
+	// NewObject is used to create a generic object from a template type
+	NewObject(template ...string) (string, error)
+	// Pin is a wrapper method to pin a hash.
+	// pinning prevents GC and persistently stores on disk
 	Pin(hash string) error
 	// CheckPin checks whether or not a pin is present
 	CheckPin(hash string) (bool, error)

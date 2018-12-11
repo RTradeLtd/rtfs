@@ -12,14 +12,26 @@ import (
 
 // test variables
 const (
-	testPIN        = "QmNZiPk974vDsPmQii3YbrMKfi12KTSNM7XMiYyiea4VYZ"
-	nodeOneAPIAddr = "192.168.1.101:5001"
-	nodeTwoAPIAddr = "192.168.2.101:5001"
+	testPIN             = "QmNZiPk974vDsPmQii3YbrMKfi12KTSNM7XMiYyiea4VYZ"
+	testDefaultReadme   = "QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv"
+	nodeOneAPIAddr      = "192.168.1.101:5001"
+	nodeTwoAPIAddr      = "192.168.2.101:5001"
+	remoteNodeMultiAddr = "/ip4/172.218.49.115/tcp/5002/ipfs/Qmf964tiE9JaxqntDsSBGasD4aaofPQtfYZyMSJJkRrVTQ"
 )
 
 func TestInitialize(t *testing.T) {
 	_, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
 	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestSwarmConnect(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = im.SwarmConnect(remoteNodeMultiAddr); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -153,5 +165,88 @@ func TestPubSub_Failure(t *testing.T) {
 	}
 	if err = im.PubSubPublish("topic", ""); err == nil {
 		t.Fatal("failed to validate data")
+	}
+}
+
+func TestPatchLink(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+	newHash, err := im.PatchLink(testDefaultReadme, "testPatchLink", testPIN, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if newHash != "Qmaga5gbbcihFVvZefTJnKJEfadvgvtPeDnhcbqSHVAnTQ" {
+		t.Fatal("failed to correctly link objects")
+	}
+	templateObject, err := im.NewObject("unixfs-dir")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = im.PatchLink(templateObject, "a/b/c", templateObject, false); err == nil {
+		t.Fatal("failed to detect error")
+	}
+	newHash, err = im.PatchLink(templateObject, "a/b/c", templateObject, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if newHash != "QmQ5D3xbMWFQRC9BKqbvnSnHri31GqvtWG1G6rE8xAZf1J" {
+		t.Fatal("failed to correct patch object")
+	}
+}
+
+func TestAppendData(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	newHash, err := im.AppendData(testPIN, "hello this is some data")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if newHash != "Qmd1SksxuY1aQqcStKv3HTNx9CnTsKhkhu9SqEaR4yrdK6" {
+		t.Fatal("failed to correctly append data")
+	}
+}
+
+func TestSetData(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	newHash, err := im.SetData(testPIN, "hello this is some data")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if newHash != "QmdfQDSAZXtxvbypJgXXiz3PiC3jwVwujNSbZn5Tkvzq8S" {
+		t.Fatal("failed to correctly set data")
+	}
+}
+
+func TestNewObject(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, nil, 5*time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+	hash, err := im.NewObject("")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hash != "QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n" {
+		t.Fatal("failed to generate new object")
+	}
+	hash, err = im.NewObject("faketemplate")
+	if err == nil {
+		t.Fatal("failed to recognize invalid template")
+	}
+	hash, err = im.NewObject("unixfs-dir")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hash != "QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn" {
+		t.Fatal("failed to generate unixfs-dir template object")
 	}
 }

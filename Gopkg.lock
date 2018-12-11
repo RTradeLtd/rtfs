@@ -42,12 +42,12 @@
   revision = "7b01a644a63680b90de22bacfb11d832e944eaab"
 
 [[projects]]
-  digest = "1:4cf758dd05cc0c5359c89d4e38f8f4af867e0de640ae954469109282b25bb2b7"
+  digest = "1:a6ee48236c081e6e9dab77220e92f1184fea1231356d5b9e93b79aaf7f050b6e"
   name = "github.com/RTradeLtd/go-ipfs-api"
   packages = ["."]
   pruneopts = "UT"
-  revision = "eac867e1c51d46556635dfb3c30ef2e9a8490264"
-  version = "v2.0.5"
+  revision = "3305968cbca627c3cc8e993014446143edbabff2"
+  version = "v2.0.6"
 
 [[projects]]
   branch = "master"
