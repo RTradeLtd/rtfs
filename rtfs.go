@@ -159,6 +159,6 @@ func (im *IpfsManager) CustomRequest(ctx context.Context, url, commad string,
 }
 
 // SwarmConnect is use to open a connection a one or more ipfs nodes
-func (im *IpfsManager) SwarmConnect(addrs ...string) error {
-	return im.shell.SwarmConnect(context.Background(), addrs...)
+func (im *IpfsManager) SwarmConnect(ctx context.Context, addrs ...string) error {
+	return im.shell.SwarmConnect(ctx, addrs...)
 }

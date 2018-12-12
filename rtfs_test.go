@@ -31,7 +31,9 @@ func TestSwarmConnect(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err = im.SwarmConnect(remoteNodeMultiAddr); err != nil {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute*2)
+	defer cancel()
+	if err = im.SwarmConnect(ctx, remoteNodeMultiAddr); err != nil {
 		t.Fatal(err)
 	}
 }
