@@ -3,7 +3,6 @@ package rtfs_test
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -269,9 +268,7 @@ func TestIPNS_Publish_And_Resolve(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if strings.Split(resolvedHash, "/")[1] != testDefaultReadme {
-		fmt.Println(resolvedHash)
-		fmt.Println(strings.Split(resolvedHash, "/")[1])
+	if strings.Split(resolvedHash, "/")[2] != testDefaultReadme {
 		t.Fatal("failed to resolve correct hash")
 	}
 }
