@@ -128,6 +128,11 @@ func (im *IpfsManager) Publish(contentHash, keyName string, lifetime, ttl time.D
 	return im.shell.PublishWithDetails(contentHash, keyName, lifetime, ttl, resolve)
 }
 
+// Resolve is used to resolve an IPNS hash
+func (im *IpfsManager) Resolve(hash string) (string, error) {
+	return im.shell.Resolve(hash)
+}
+
 // PubSubPublish is used to publish a a message to the given topic
 func (im *IpfsManager) PubSubPublish(topic string, data string) error {
 	if topic == "" {
