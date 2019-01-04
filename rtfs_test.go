@@ -271,7 +271,7 @@ func TestIPNS_Publish_And_Resolve(t *testing.T) {
 	}
 	if strings.Split(resolvedHash, "/")[1] != testDefaultReadme {
 		fmt.Println(resolvedHash)
-		fmt.Println(strings.Split(resolvedHash, "/"))
+		fmt.Println(strings.Split(resolvedHash, "/")[1])
 		t.Fatal("failed to resolve correct hash")
 	}
 }
