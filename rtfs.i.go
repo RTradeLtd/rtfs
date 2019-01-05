@@ -42,6 +42,8 @@ type Manager interface {
 	CheckPin(hash string) (bool, error)
 	// Publish is used for fine grained control over IPNS record publishing
 	Publish(contentHash, keyName string, lifetime, ttl time.Duration, resolve bool) (*ipfsapi.PublishResponse, error)
+	// Resolve is used to resolve an IPNS hash
+	Resolve(hash string) (string, error)
 	// PubSubPublish is used to publish a a message to the given topic
 	PubSubPublish(topic string, data string) error
 	// CustomRequest is used to make a custom request

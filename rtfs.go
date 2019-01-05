@@ -15,12 +15,11 @@ import (
 // IpfsManager is our helper wrapper for IPFS
 type IpfsManager struct {
 	shell       *ipfsapi.Shell
-	keystore    *KeystoreManager
 	nodeAPIAddr string
 }
 
 // NewManager is used to initialize our Ipfs manager struct
-func NewManager(ipfsURL string, keystore *KeystoreManager, timeout time.Duration) (*IpfsManager, error) {
+func NewManager(ipfsURL string, timeout time.Duration) (*IpfsManager, error) {
 	// set up shell
 	sh := newShell(ipfsURL)
 	sh.SetTimeout(time.Minute * 5)
@@ -32,7 +31,6 @@ func NewManager(ipfsURL string, keystore *KeystoreManager, timeout time.Duration
 	return &IpfsManager{
 		shell:       sh,
 		nodeAPIAddr: ipfsURL,
-		keystore:    keystore,
 	}, nil
 }
 
@@ -115,17 +113,12 @@ func (im *IpfsManager) CheckPin(hash string) (bool, error) {
 
 // Publish is used for fine grained control over IPNS record publishing
 func (im *IpfsManager) Publish(contentHash, keyName string, lifetime, ttl time.Duration, resolve bool) (*ipfsapi.PublishResponse, error) {
-	if im.keystore == nil {
-		return nil, errors.New("attempting to create ipns entry with dynamic keys keystore is not enabled/generated yet")
-	}
-
-	if keyPresent, err := im.keystore.CheckIfKeyExists(keyName); err != nil {
-		return nil, err
-	} else if !keyPresent {
-		return nil, errors.New("attempting to sign with non existent key")
-	}
-
 	return im.shell.PublishWithDetails(contentHash, keyName, lifetime, ttl, resolve)
+}
+
+// Resolve is used to resolve an IPNS hash
+func (im *IpfsManager) Resolve(hash string) (string, error) {
+	return im.shell.Resolve(hash)
 }
 
 // PubSubPublish is used to publish a a message to the given topic
