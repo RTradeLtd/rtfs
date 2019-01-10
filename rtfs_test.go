@@ -16,9 +16,10 @@ const (
 	testPIN             = "QmNZiPk974vDsPmQii3YbrMKfi12KTSNM7XMiYyiea4VYZ"
 	ipnsPath            = "/ipns/Qmd2GzQc68XXicmUpJZUadjsTcPUsXgP1iP1Hp6CYaY4xU"
 	testDefaultReadme   = "QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv"
+	testRefs            = "QmPS6VssQGyBYjGQSK8ordvXaU1yUoaUmTfmrV7daLeRPH"
 	nodeOneAPIAddr      = "192.168.1.101:5001"
 	nodeTwoAPIAddr      = "192.168.2.101:5001"
-	remoteNodeMultiAddr = "/ip4/172.218.49.115/tcp/5002/ipfs/Qmf964tiE9JaxqntDsSBGasD4aaofPQtfYZyMSJJkRrVTQ"
+	remoteNodeMultiAddr = "/ip4/172.218.49.115/tcp/4002/ipfs/Qmf964tiE9JaxqntDsSBGasD4aaofPQtfYZyMSJJkRrVTQ"
 )
 
 func TestInitialize(t *testing.T) {
@@ -270,5 +271,22 @@ func TestIPNS_Publish_And_Resolve(t *testing.T) {
 	}
 	if strings.Split(resolvedHash, "/")[2] != testDefaultReadme {
 		t.Fatal("failed to resolve correct hash")
+	}
+}
+
+func TestRTNS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+	size, refs, err := im.DedupAndCalculatePinSize(testRefs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(refs) == 0 {
+		t.Fatal("invalid refs count")
+	}
+	if size != 15729672 {
+		t.Fatal("bad size recovered")
 	}
 }
