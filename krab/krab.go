@@ -6,10 +6,10 @@ import (
 	"strings"
 
 	"github.com/RTradeLtd/crypto"
+	ci "github.com/RTradeLtd/go-ipfs-api/gxlibs/github.com/libp2p/go-libp2p-crypto"
 	ds "github.com/ipfs/go-datastore"
 	"github.com/ipfs/go-datastore/query"
 	badger "github.com/ipfs/go-ds-badger"
-	ci "github.com/libp2p/go-libp2p-crypto"
 )
 
 // Krab is used to manage an encrypted IPFS keystore

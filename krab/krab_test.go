@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	ci "github.com/libp2p/go-libp2p-crypto"
+	ci "github.com/RTradeLtd/go-ipfs-api/gxlibs/github.com/libp2p/go-libp2p-crypto"
 
 	"github.com/RTradeLtd/rtfs/krab"
 )

@@ -7,7 +7,7 @@ import (
 	"github.com/RTradeLtd/rtfs/krab"
 
 	mnemonics "github.com/RTradeLtd/entropy-mnemonics"
-	ci "github.com/libp2p/go-libp2p-crypto"
+	ci "github.com/RTradeLtd/go-ipfs-api/gxlibs/github.com/libp2p/go-libp2p-crypto"
 )
 
 // KeystoreManager is howe we manipulat keys

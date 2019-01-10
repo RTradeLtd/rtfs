@@ -9,8 +9,8 @@ import (
 
 	"github.com/RTradeLtd/rtfs/krab"
 
+	ci "github.com/RTradeLtd/go-ipfs-api/gxlibs/github.com/libp2p/go-libp2p-crypto"
 	"github.com/RTradeLtd/rtfs"
-	ci "github.com/libp2p/go-libp2p-crypto"
 )
 
 func TestKeystoreManager(t *testing.T) {
