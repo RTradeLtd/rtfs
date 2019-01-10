@@ -102,6 +102,24 @@ func (im *IpfsManager) Pin(hash string) error {
 	return nil
 }
 
+// PinUpdate is used to update one pin to another, while making sure all objects
+// in the new pin are local, followed by removing the old pin.
+//
+// This is an optimized version of pinning the new content, and then removing the
+// old content.
+//
+// returns the new pin path
+func (im *IpfsManager) PinUpdate(fromPath, toPath string) (string, error) {
+	out, err := im.shell.PinUpdate(fromPath, toPath)
+	if err != nil {
+		return "", err
+	}
+	if len(out) == 0 {
+		return "", errors.New("failed to retrieve new pin paths")
+	}
+	return out["Pins"][1], nil
+}
+
 // CheckPin checks whether or not a pin is present
 func (im *IpfsManager) CheckPin(hash string) (bool, error) {
 	pins, err := im.shell.Pins()
@@ -159,11 +177,13 @@ func (im *IpfsManager) SwarmConnect(ctx context.Context, addrs ...string) error 
 	return im.shell.SwarmConnect(ctx, addrs...)
 }
 
+// non-class functions
+
 // DedupAndCalculatePinSize is used to remove duplicate refers to objects for a more accurate pin size cost
 // it returns the size of all refs, as well as all unique references
-func (im *IpfsManager) DedupAndCalculatePinSize(hash string) (int64, []string, error) {
+func DedupAndCalculatePinSize(hash string, im Manager) (int64, []string, error) {
 	// format a multiaddr api to connect to
-	parsedIP := strings.Split(im.nodeAPIAddr, ":")
+	parsedIP := strings.Split(im.NodeAddress(), ":")
 	multiAddrIP := fmt.Sprintf("/ip4/%s/tcp/%s", parsedIP[0], parsedIP[1])
 	// Shell::Refs doesn't seem to return more than 1 hash, and doesn't allow usage of flags like `--unique`
 	// will open up a PR with main `go-ipfs-api` to address this, but in the mean time this is a good monkey-patch

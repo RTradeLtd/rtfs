@@ -279,7 +279,7 @@ func TestRTNS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	size, refs, err := im.DedupAndCalculatePinSize(testRefs)
+	size, refs, err := rtfs.DedupAndCalculatePinSize(testRefs, im)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -288,5 +288,31 @@ func TestRTNS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
 	}
 	if size != 15729672 {
 		t.Fatal("bad size recovered")
+	}
+}
+
+func TestRTNS_PinUpdate(t *testing.T) {
+	var (
+		oldPin          = "zb2rheJDzFsa7AsCnSxKimX8eF5wkjriJqeGBamjQF79vr14R"
+		newPin          = "QmbB6M914rwm9ZezVd2u8Y2k4g5TRoWWxP3PYKkDipCzpT"
+		expectedNewPath = "/ipfs/" + newPin
+	)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// pin the content first
+	if err := im.Pin(oldPin); err != nil {
+		t.Fatal(err)
+	}
+	if err := im.Pin(newPin); err != nil {
+		t.Fatal(err)
+	}
+	newPath, err := im.PinUpdate(oldPin, newPin)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if newPath != expectedNewPath {
+		t.Fatal("failed to correctly get new path")
 	}
 }

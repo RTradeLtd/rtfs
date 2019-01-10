@@ -42,8 +42,7 @@
   revision = "7b01a644a63680b90de22bacfb11d832e944eaab"
 
 [[projects]]
-  branch = "ungx"
-  digest = "1:b503a96b5605d252423307a268c1cc30811f7377ef475bb511808574045e9793"
+  digest = "1:0c4a9c735bc4155648df968cb146c0f45e74cca4cea6d7d0f8d16cf7f9ee633a"
   name = "github.com/RTradeLtd/go-ipfs-api"
   packages = [
     ".",
@@ -68,19 +67,8 @@
     "options",
   ]
   pruneopts = "UT"
-  revision = "681d8ab903559ed5477a9922c6206566f1e0befa"
-
-[[projects]]
-  branch = "master"
-  digest = "1:4cf11742b199ab3aacf26b00187e72f7ff8ba2145f363b74f295d54f098f79e4"
-  name = "github.com/agl/ed25519"
-  packages = [
-    ".",
-    "edwards25519",
-    "extra25519",
-  ]
-  pruneopts = "UT"
-  revision = "5312a61534124124185d41f09206b9fef1d88403"
+  revision = "be80647e8f3401950dbabbeddef797435db5848f"
+  version = "v2.0.0rc1-u"
 
 [[projects]]
   branch = "master"
@@ -171,17 +159,6 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "b497e2f366b8624394fb2e89c10ab607bebdde0b"
-
-[[projects]]
-  digest = "1:4ff86c6d6dd8df23a58e6b6060fea5f150d1a502cdfe8a3e9efd5d25339196c6"
-  name = "github.com/libp2p/go-libp2p-crypto"
-  packages = [
-    ".",
-    "pb",
-  ]
-  pruneopts = "UT"
-  revision = "274de1bb6c27780863df6b230c91324ab481dab2"
-  version = "v2.0.1"
 
 [[projects]]
   digest = "1:0c84c529a410cea768ebeaf3ea70632f2d8df41662003204045ff1a32cd79cda"
@@ -292,7 +269,6 @@
     "github.com/ipfs/go-datastore",
     "github.com/ipfs/go-datastore/query",
     "github.com/ipfs/go-ds-badger",
-    "github.com/libp2p/go-libp2p-crypto",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

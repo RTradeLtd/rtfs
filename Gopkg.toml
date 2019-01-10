@@ -1,14 +1,12 @@
+ignored = ["github.com/libp2p/go-libp2p-crypto"]
+
 [prune]
   go-tests = true
   unused-packages = true
 
 [[constraint]]
   name = "github.com/RTradeLtd/go-ipfs-api"
-  branch = "ungx"
- 
-[[constraint]]
-  name = "github.com/libp2p/go-libp2p-crypto"
-  version = "2.0.1"
+  version = "v2.0.0rc1-u"
 
 [[constraint]]
   name = "github.com/RTradeLtd/entropy-mnemonics"
