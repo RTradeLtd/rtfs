@@ -3,7 +3,6 @@ package rtfs_test
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -280,10 +279,14 @@ func TestRTNS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	size, err := im.DedupAndCalculatePinSize(testRefs)
+	size, refs, err := im.DedupAndCalculatePinSize(testRefs)
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println("calulcated ref size", size)
-	fmt.Println("expected   ref size 15729480")
+	if len(refs) == 0 {
+		t.Fatal("invalid refs count")
+	}
+	if size != 15729672 {
+		t.Fatal("bad size recovered")
+	}
 }

@@ -51,5 +51,6 @@ type Manager interface {
 	// SwarmConnect is use to open a connection a one or more ipfs nodes
 	SwarmConnect(ctx context.Context, addrs ...string) error
 	// DedupAndCalculatePinSize is used to remove duplicate refers to objects for a more accurate pin size cost
-	DedupAndCalculatePinSize(hash string) (int64, error)
+	// it returns the size of all refs, as well as all unique references
+	DedupAndCalculatePinSize(hash string) (int64, []string, error)
 }

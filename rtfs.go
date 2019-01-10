@@ -160,7 +160,8 @@ func (im *IpfsManager) SwarmConnect(ctx context.Context, addrs ...string) error 
 }
 
 // DedupAndCalculatePinSize is used to remove duplicate refers to objects for a more accurate pin size cost
-func (im *IpfsManager) DedupAndCalculatePinSize(hash string) (int64, error) {
+// it returns the size of all refs, as well as all unique references
+func (im *IpfsManager) DedupAndCalculatePinSize(hash string) (int64, []string, error) {
 	// format a multiaddr api to connect to
 	parsedIP := strings.Split(im.nodeAPIAddr, ":")
 	multiAddrIP := fmt.Sprintf("/ip4/%s/tcp/%s", parsedIP[0], parsedIP[1])
@@ -168,7 +169,7 @@ func (im *IpfsManager) DedupAndCalculatePinSize(hash string) (int64, error) {
 	// will open up a PR with main `go-ipfs-api` to address this, but in the mean time this is a good monkey-patch
 	outBytes, err := exec.Command("ipfs", fmt.Sprintf("--api=%s", multiAddrIP), "refs", "--recursive", "--unique", hash).Output()
 	if err != nil {
-		return 0, err
+		return 0, nil, err
 	}
 	// convert exec output to scanner
 	scanner := bufio.NewScanner(strings.NewReader(string(outBytes)))
@@ -178,7 +179,7 @@ func (im *IpfsManager) DedupAndCalculatePinSize(hash string) (int64, error) {
 		refsArray = append(refsArray, scanner.Text())
 	}
 	if scanner.Err() != nil {
-		return 0, scanner.Err()
+		return 0, nil, scanner.Err()
 	}
 	// the total size of all data in all references
 	var totalDataSize int
@@ -187,10 +188,10 @@ func (im *IpfsManager) DedupAndCalculatePinSize(hash string) (int64, error) {
 		// grab object stats for the reference
 		refStats, err := im.Stat(ref)
 		if err != nil {
-			return 0, err
+			return 0, nil, err
 		}
 		// update totalDataSize
 		totalDataSize = totalDataSize + refStats.DataSize
 	}
-	return int64(totalDataSize), nil
+	return int64(totalDataSize), refsArray, nil
 }
