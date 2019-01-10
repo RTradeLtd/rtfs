@@ -106,7 +106,7 @@ func (im *IpfsManager) Pin(hash string) error {
 // old content.
 //
 // returns the new pin path
-func (im *IpfsManager) PinUpdate(fromPath, toPath string) (string, error) {
+func (im *IpfsManager) PinUpdate(from, to string) (string, error) {
 	out, err := im.shell.PinUpdate(fromPath, toPath)
 	if err != nil {
 		return "", err
