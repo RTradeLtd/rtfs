@@ -45,7 +45,7 @@ type Manager interface {
 	// old content.
 	//
 	// returns the new pin path
-	PinUpdate(fromPath, toPath string) (string, error)
+	PinUpdate(from, to string) (string, error)
 	// CheckPin checks whether or not a pin is present
 	CheckPin(hash string) (bool, error)
 	// Publish is used for fine grained control over IPNS record publishing
