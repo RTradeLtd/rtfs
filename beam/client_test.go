@@ -15,11 +15,11 @@ func TestBeam(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	laser, err := beam.NewLaser(cfg.IPFS.APIConnection.Host+":"+cfg.IPFS.APIConnection.Port, cfg.IPFS.APIConnection.Host+":"+cfg.IPFS.APIConnection.Port, false, false)
+	laser, err := beam.NewLaser(cfg.IPFS.APIConnection.Host+":"+cfg.IPFS.APIConnection.Port, "", cfg.IPFS.APIConnection.Host+":"+cfg.IPFS.APIConnection.Port, false, false)
 	if err != nil {
 		t.Fatal(err)
 	}
-	rtfsManager, err := rtfs.NewManager(cfg.IPFS.APIConnection.Host+":"+cfg.IPFS.APIConnection.Port, time.Minute*5, false)
+	rtfsManager, err := rtfs.NewManager(cfg.IPFS.APIConnection.Host+":"+cfg.IPFS.APIConnection.Port, "", time.Minute*5, false)
 	if err != nil {
 		t.Fatal(err)
 	}
