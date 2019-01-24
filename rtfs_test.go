@@ -3,7 +3,6 @@ package rtfs_test
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"os"
 	"reflect"
 	"sort"
@@ -290,7 +289,6 @@ func TestRTFS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
 		t.Fatal("invalid refs count")
 	}
 	if size != 15729672 {
-		fmt.Println(size)
 		t.Fatal("bad size recovered")
 	}
 }
