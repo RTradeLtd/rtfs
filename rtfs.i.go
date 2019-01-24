@@ -38,6 +38,14 @@ type Manager interface {
 	// Pin is a wrapper method to pin a hash.
 	// pinning prevents GC and persistently stores on disk
 	Pin(hash string) error
+	// PinUpdate is used to update one pin to another, while making sure all objects
+	// in the new pin are local, followed by removing the old pin.
+	//
+	// This is an optimized version of pinning the new content, and then removing the
+	// old content.
+	//
+	// returns the new pin path
+	PinUpdate(from, to string) (string, error)
 	// CheckPin checks whether or not a pin is present
 	CheckPin(hash string) (bool, error)
 	// Publish is used for fine grained control over IPNS record publishing
@@ -50,7 +58,6 @@ type Manager interface {
 	CustomRequest(ctx context.Context, url, commad string, opts map[string]string, args ...string) (*ipfsapi.Response, error)
 	// SwarmConnect is use to open a connection a one or more ipfs nodes
 	SwarmConnect(ctx context.Context, addrs ...string) error
-	// DedupAndCalculatePinSize is used to remove duplicate refers to objects for a more accurate pin size cost
-	// it returns the size of all refs, as well as all unique references
-	DedupAndCalculatePinSize(hash string) (int64, []string, error)
+	// Refs is used to retrieve references of a hash
+	Refs(hash string, recursive, unique bool) ([]string, error)
 }

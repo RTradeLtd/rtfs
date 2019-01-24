@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"os"
+	"reflect"
+	"sort"
 	"strings"
 	"testing"
 	"time"
@@ -16,21 +18,21 @@ const (
 	testPIN             = "QmNZiPk974vDsPmQii3YbrMKfi12KTSNM7XMiYyiea4VYZ"
 	ipnsPath            = "/ipns/Qmd2GzQc68XXicmUpJZUadjsTcPUsXgP1iP1Hp6CYaY4xU"
 	testDefaultReadme   = "QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv"
-	testRefs            = "QmPS6VssQGyBYjGQSK8ordvXaU1yUoaUmTfmrV7daLeRPH"
+	testRefsHash        = "QmPS6VssQGyBYjGQSK8ordvXaU1yUoaUmTfmrV7daLeRPH"
 	nodeOneAPIAddr      = "192.168.1.101:5001"
 	nodeTwoAPIAddr      = "192.168.2.101:5001"
-	remoteNodeMultiAddr = "/ip4/172.218.49.115/tcp/4002/ipfs/Qmf964tiE9JaxqntDsSBGasD4aaofPQtfYZyMSJJkRrVTQ"
+	remoteNodeMultiAddr = "/ip4/172.218.49.115/tcp/4003/ipfs/Qmct4NniSeuCZ58mSpa7USsJRjCPzL4wTwqmjfa6ANTkMX"
 )
 
 func TestInitialize(t *testing.T) {
-	_, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	_, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestSwarmConnect(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -42,7 +44,7 @@ func TestSwarmConnect(t *testing.T) {
 }
 
 func TestCustomRequest(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -56,7 +58,7 @@ func TestCustomRequest(t *testing.T) {
 }
 
 func TestPin(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -80,7 +82,7 @@ func TestPin(t *testing.T) {
 }
 
 func TestStat(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -92,7 +94,7 @@ func TestStat(t *testing.T) {
 }
 
 func TestDagGet(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -103,7 +105,7 @@ func TestDagGet(t *testing.T) {
 }
 
 func TestDagPut(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -124,7 +126,7 @@ func TestDagPut(t *testing.T) {
 }
 
 func TestNodeAddress(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -134,7 +136,7 @@ func TestNodeAddress(t *testing.T) {
 }
 
 func TestAdd(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -150,7 +152,7 @@ func TestAdd(t *testing.T) {
 }
 
 func TestPubSub_Success(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -160,7 +162,7 @@ func TestPubSub_Success(t *testing.T) {
 }
 
 func TestPubSub_Failure(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -174,7 +176,7 @@ func TestPubSub_Failure(t *testing.T) {
 }
 
 func TestPatchLink(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -202,7 +204,7 @@ func TestPatchLink(t *testing.T) {
 }
 
 func TestAppendData(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -217,7 +219,7 @@ func TestAppendData(t *testing.T) {
 }
 
 func TestSetData(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -232,7 +234,7 @@ func TestSetData(t *testing.T) {
 }
 
 func TestNewObject(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -257,7 +259,7 @@ func TestNewObject(t *testing.T) {
 }
 
 func TestIPNS_Publish_And_Resolve(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -274,12 +276,12 @@ func TestIPNS_Publish_And_Resolve(t *testing.T) {
 	}
 }
 
-func TestRTNS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute)
+func TestRTFS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
-	size, refs, err := im.DedupAndCalculatePinSize(testRefs)
+	size, refs, err := rtfs.DedupAndCalculatePinSize(testRefsHash, im)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -288,5 +290,56 @@ func TestRTNS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
 	}
 	if size != 15729672 {
 		t.Fatal("bad size recovered")
+	}
+}
+
+func TestRTNS_PinUpdate(t *testing.T) {
+	var (
+		oldPin          = "zb2rheJDzFsa7AsCnSxKimX8eF5wkjriJqeGBamjQF79vr14R"
+		newPin          = "QmbB6M914rwm9ZezVd2u8Y2k4g5TRoWWxP3PYKkDipCzpT"
+		expectedNewPath = "/ipfs/" + newPin
+	)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// pin the content first
+	if err := im.Pin(oldPin); err != nil {
+		t.Fatal(err)
+	}
+	if err := im.Pin(newPin); err != nil {
+		t.Fatal(err)
+	}
+	newPath, err := im.PinUpdate(oldPin, newPin)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if newPath != expectedNewPath {
+		t.Fatal("failed to correctly get new path")
+	}
+}
+
+func TestRefs(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	references, err := im.Refs(testDefaultReadme, true, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	expected := []string{
+		"QmZTR5bcpQD7cFgTorqxZDYaew1Wqgfbd2ud9QqGPAkK2V",
+		"QmYCvbfNbCwFR45HiNP45rwJgvatpiW38D961L5qAhUM5Y",
+		"QmY5heUM5qgRubMDD1og9fhCPA6QdkMp3QCwd4s7gJsyE7",
+		"QmejvEPop4D7YUadeGqYWmZxHhLc4JBUCzJJHWMzdcMe2y",
+		"QmXgqKTbzdh83pQtKFb19SpMCpDDcKR2ujqk3pKph9aCNF",
+		"QmPZ9gcCEpqKTo6aq61g2nXGUhM4iCL3ewB6LDXZCtioEB",
+		"QmQ5vhrL7uv6tuoN9KeVBwd4PwfQkXdVVmDLUZuTNxqgvm",
+	}
+	sort.Strings(expected)
+	sort.Strings(references)
+	if !reflect.DeepEqual(expected, references) {
+		t.Fatal("recovered references not equal to expected")
 	}
 }
