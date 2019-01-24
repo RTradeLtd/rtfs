@@ -26,8 +26,14 @@ func NewManager(ipfsURL, token string, timeout time.Duration, direct bool) (*Ipf
 	sh := newShell(ipfsURL, direct)
 	// set timeout
 	sh.SetTimeout(timeout)
+	var err error
+	if direct {
+		_, err = sh.WithAuthorization(token).ID()
+	} else {
+		_, err = sh.ID()
+	}
 	// validate we have an active connection
-	if _, err := sh.ID(); err != nil {
+	if err != nil {
 		return nil, fmt.Errorf("failed to connect to ipfs node at '%s': %s", ipfsURL, err.Error())
 	}
 	// instantiate and return manager
