@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"os"
+	"reflect"
+	"sort"
 	"strings"
 	"testing"
 	"time"
@@ -314,5 +316,30 @@ func TestRTNS_PinUpdate(t *testing.T) {
 	}
 	if newPath != expectedNewPath {
 		t.Fatal("failed to correctly get new path")
+	}
+}
+
+func TestRefs(t *testing.T) {
+	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	references, err := im.Refs(testDefaultReadme, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	expected := []string{
+		"QmZTR5bcpQD7cFgTorqxZDYaew1Wqgfbd2ud9QqGPAkK2V",
+		"QmYCvbfNbCwFR45HiNP45rwJgvatpiW38D961L5qAhUM5Y",
+		"QmY5heUM5qgRubMDD1og9fhCPA6QdkMp3QCwd4s7gJsyE7",
+		"QmejvEPop4D7YUadeGqYWmZxHhLc4JBUCzJJHWMzdcMe2y",
+		"QmXgqKTbzdh83pQtKFb19SpMCpDDcKR2ujqk3pKph9aCNF",
+		"QmPZ9gcCEpqKTo6aq61g2nXGUhM4iCL3ewB6LDXZCtioEB",
+		"QmQ5vhrL7uv6tuoN9KeVBwd4PwfQkXdVVmDLUZuTNxqgvm",
+	}
+	sort.Strings(expected)
+	sort.Strings(references)
+	if !reflect.DeepEqual(expected, references) {
+		t.Fatal("recovered references not equal to expected")
 	}
 }

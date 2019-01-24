@@ -43,14 +43,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:20827dc685ef3e53cbc40ac8cde91b71d60b450a55aca0928c342d3022d0638d"
+  digest = "1:62f250da42fea60f19ee19b3ff711b5d2eb535796a1f6a33a29474d50bbaab67"
   name = "github.com/RTradeLtd/go-ipfs-api"
   packages = [
     ".",
     "options",
   ]
   pruneopts = "UT"
-  revision = "5585de7f98a56603295073f320ab16e62dfd4ded"
+  revision = "8ea1df76e3f705a62bd73961fe6b96e2a14cf7b2"
 
 [[projects]]
   branch = "master"
