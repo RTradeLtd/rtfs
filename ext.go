@@ -5,8 +5,10 @@ package rtfs
 // DedupAndCalculatePinSize is used to remove duplicate refers to objects for a more accurate pin size cost
 // it returns the size of all refs, as well as all unique references
 func DedupAndCalculatePinSize(hash string, im Manager) (int64, []string, error) {
-	// format a multiaddr api to connect to
-	refs, err := im.Refs(hash, true)
+	// since we  are looking to calculate deduplicated costs,
+	// we only want to consider hashes once, ie if they are linked multple times
+	// ignore them
+	refs, err := im.Refs(hash, true, true)
 	if err != nil {
 		return 0, nil, err
 	}

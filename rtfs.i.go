@@ -59,5 +59,5 @@ type Manager interface {
 	// SwarmConnect is use to open a connection a one or more ipfs nodes
 	SwarmConnect(ctx context.Context, addrs ...string) error
 	// Refs is used to retrieve references of a hash
-	Refs(hash string, recursive bool) ([]string, error)
+	Refs(hash string, recursive, unique bool) ([]string, error)
 }

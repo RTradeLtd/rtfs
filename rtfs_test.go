@@ -3,6 +3,7 @@ package rtfs_test
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"reflect"
 	"sort"
@@ -18,7 +19,7 @@ const (
 	testPIN             = "QmNZiPk974vDsPmQii3YbrMKfi12KTSNM7XMiYyiea4VYZ"
 	ipnsPath            = "/ipns/Qmd2GzQc68XXicmUpJZUadjsTcPUsXgP1iP1Hp6CYaY4xU"
 	testDefaultReadme   = "QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv"
-	testRefs            = "QmPS6VssQGyBYjGQSK8ordvXaU1yUoaUmTfmrV7daLeRPH"
+	testRefsHash        = "QmPS6VssQGyBYjGQSK8ordvXaU1yUoaUmTfmrV7daLeRPH"
 	nodeOneAPIAddr      = "192.168.1.101:5001"
 	nodeTwoAPIAddr      = "192.168.2.101:5001"
 	remoteNodeMultiAddr = "/ip4/172.218.49.115/tcp/4003/ipfs/Qmct4NniSeuCZ58mSpa7USsJRjCPzL4wTwqmjfa6ANTkMX"
@@ -276,12 +277,12 @@ func TestIPNS_Publish_And_Resolve(t *testing.T) {
 	}
 }
 
-func TestRTNS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
+func TestRTFS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
 	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
 	if err != nil {
 		t.Fatal(err)
 	}
-	size, refs, err := rtfs.DedupAndCalculatePinSize(testRefs, im)
+	size, refs, err := rtfs.DedupAndCalculatePinSize(testRefsHash, im)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -289,6 +290,7 @@ func TestRTNS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
 		t.Fatal("invalid refs count")
 	}
 	if size != 15729672 {
+		fmt.Println(size)
 		t.Fatal("bad size recovered")
 	}
 }
@@ -324,7 +326,7 @@ func TestRefs(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	references, err := im.Refs(testDefaultReadme, true)
+	references, err := im.Refs(testDefaultReadme, true, false)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -176,8 +176,8 @@ func (im *IpfsManager) SwarmConnect(ctx context.Context, addrs ...string) error 
 }
 
 // Refs is used to retrieve references of a hash
-func (im *IpfsManager) Refs(hash string, recursive bool) ([]string, error) {
-	refs, err := im.shell.Refs(hash, recursive)
+func (im *IpfsManager) Refs(hash string, recursive, unique bool) ([]string, error) {
+	refs, err := im.shell.Refs(hash, recursive, unique)
 	if err != nil {
 		return nil, err
 	}
