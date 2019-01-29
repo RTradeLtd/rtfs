@@ -15,7 +15,7 @@ func TestBeam(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	laser, err := beam.NewLaser(cfg.IPFS.APIConnection.Host+":"+cfg.IPFS.APIConnection.Port, "", cfg.IPFS.APIConnection.Host+":"+cfg.IPFS.APIConnection.Port, false, false)
+	laser, err := beam.NewLaser(cfg.IPFS.APIConnection.Host+":"+cfg.IPFS.APIConnection.Port, cfg.IPFS.APIConnection.Host+":"+cfg.IPFS.APIConnection.Port, "", false, false)
 	if err != nil {
 		t.Fatal(err)
 	}
