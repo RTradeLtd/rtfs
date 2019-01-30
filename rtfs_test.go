@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	ipfsapi "github.com/RTradeLtd/go-ipfs-api"
 	"github.com/RTradeLtd/rtfs"
 )
 
@@ -41,7 +42,7 @@ func TestInitialize(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct); err != nil {
+			if _, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout); err != nil {
 				t.Fatal(err)
 			}
 		})
@@ -58,13 +59,13 @@ func TestSwarmConnect(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
 			ctx, cancel := context.WithTimeout(context.Background(), time.Minute*2)
 			defer cancel()
-			if err := im.SwarmConnect(ctx, remoteNodeMultiAddr); err != nil {
+			if err := im.WithAuthorization(tt.args.token).SwarmConnect(ctx, remoteNodeMultiAddr); err != nil {
 				t.Fatal(err)
 			}
 		})
@@ -72,7 +73,7 @@ func TestSwarmConnect(t *testing.T) {
 }
 
 func TestCustomRequest(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, "", 5*time.Minute, false)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, "", 5*time.Minute)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -95,14 +96,14 @@ func TestPin(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
 			if err = im.Pin(testPIN); err != nil {
 				t.Fatal(err)
 			}
-			if exists, err := im.CheckPin(testPIN); err != nil {
+			if exists, err := im.WithAuthorization(tt.args.token).CheckPin(testPIN); err != nil {
 				t.Fatal(err)
 			} else if !exists {
 				t.Fatal("pin does not exist")
@@ -121,11 +122,11 @@ func TestStat(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
-			if stat, err := im.Stat(testPIN); err != nil {
+			if stat, err := im.WithAuthorization(tt.args.token).Stat(testPIN); err != nil {
 				t.Fatal(err)
 			} else if stat == nil {
 				t.Fatal("failed to retrieve oject stats")
@@ -144,12 +145,12 @@ func TestDagGet(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
 			var out interface{}
-			if err := im.DagGet(testPIN, &out); err != nil {
+			if err := im.WithAuthorization(tt.args.token).DagGet(testPIN, &out); err != nil {
 				t.Fatal(err)
 			} else if out == nil {
 				t.Fatal("failed to get dag")
@@ -168,7 +169,7 @@ func TestDagPut(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -181,7 +182,7 @@ func TestDagPut(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if resp, err := im.DagPut(marshaled, "json", "cbor"); err != nil {
+			if resp, err := im.WithAuthorization(tt.args.token).DagPut(marshaled, "json", "cbor"); err != nil {
 				t.Fatal(err)
 			} else if resp != "zdpuAmPwEoNHBRTQENxpV2kzSVujozH8WzML19QHLxeitenXc" {
 				t.Fatal("failed to generate correct dag object")
@@ -200,7 +201,7 @@ func TestNodeAddress(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -221,7 +222,7 @@ func TestAdd(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -229,7 +230,7 @@ func TestAdd(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if resp, err := im.Add(file); err != nil {
+			if resp, err := im.WithAuthorization(tt.args.token).Add(file); err != nil {
 				t.Fatal(err)
 			} else if resp != "QmSwK5Mw7YHP69gF6oYNZdsuuh37HR3SSiUxu3F5fXZ3az" {
 				t.Fatal("bad hash generated")
@@ -248,11 +249,11 @@ func TestPubSub_Success(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
-			if err = im.PubSubPublish("topic", "data"); err != nil {
+			if err = im.WithAuthorization(tt.args.token).PubSubPublish("topic", "data"); err != nil {
 				t.Fatal(err)
 			}
 		})
@@ -260,7 +261,7 @@ func TestPubSub_Success(t *testing.T) {
 }
 
 func TestPubSub_Failure(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, "", 5*time.Minute, false)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, "", 5*time.Minute)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -283,11 +284,11 @@ func TestPatchLink(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
-			newHash, err := im.PatchLink(testDefaultReadme, "testPatchLink", testPIN, false)
+			newHash, err := im.WithAuthorization(tt.args.token).PatchLink(testDefaultReadme, "testPatchLink", testPIN, false)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -298,10 +299,10 @@ func TestPatchLink(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if _, err = im.PatchLink(templateObject, "a/b/c", templateObject, false); err == nil {
+			if _, err = im.WithAuthorization(tt.args.token).PatchLink(templateObject, "a/b/c", templateObject, false); err == nil {
 				t.Fatal("failed to detect error")
 			}
-			newHash, err = im.PatchLink(templateObject, "a/b/c", templateObject, true)
+			newHash, err = im.WithAuthorization(tt.args.token).PatchLink(templateObject, "a/b/c", templateObject, true)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -321,11 +322,11 @@ func TestAppendData(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
-			newHash, err := im.AppendData(testPIN, "hello this is some data")
+			newHash, err := im.WithAuthorization(tt.args.token).AppendData(testPIN, "hello this is some data")
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -346,11 +347,11 @@ func TestSetData(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
-			newHash, err := im.SetData(testPIN, "hello this is some data")
+			newHash, err := im.WithAuthorization(tt.args.token).SetData(testPIN, "hello this is some data")
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -371,22 +372,22 @@ func TestNewObject(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
-			hash, err := im.NewObject("")
+			hash, err := im.WithAuthorization(tt.args.token).NewObject("")
 			if err != nil {
 				t.Fatal(err)
 			}
 			if hash != "QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n" {
 				t.Fatal("failed to generate new object")
 			}
-			hash, err = im.NewObject("faketemplate")
+			hash, err = im.WithAuthorization(tt.args.token).NewObject("faketemplate")
 			if err == nil {
 				t.Fatal("failed to recognize invalid template")
 			}
-			hash, err = im.NewObject("unixfs-dir")
+			hash, err = im.WithAuthorization(tt.args.token).NewObject("unixfs-dir")
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -407,17 +408,32 @@ func TestIPNS_Publish_And_Resolve(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
-			resp, err := im.Publish(testDefaultReadme, "self", time.Hour*24, time.Hour*24, true)
-			if err != nil {
-				t.Fatal(err)
-			}
-			resolvedHash, err := im.Resolve(resp.Name)
-			if err != nil {
-				t.Fatal(err)
+			var (
+				resp         *ipfsapi.PublishResponse
+				resolvedHash string
+			)
+			if tt.name == "Direct" {
+				resp, err = im.WithAuthorization(tt.args.token).Publish(testDefaultReadme, "self", time.Hour*24, time.Hour*24, true)
+				if err != nil {
+					t.Fatal(err)
+				}
+				resolvedHash, err = im.WithAuthorization(tt.args.token).Resolve(resp.Name)
+				if err != nil {
+					t.Fatal(err)
+				}
+			} else {
+				resp, err = im.Publish(testDefaultReadme, "self", time.Hour*24, time.Hour*24, true)
+				if err != nil {
+					t.Fatal(err)
+				}
+				resolvedHash, err = im.Resolve(resp.Name)
+				if err != nil {
+					t.Fatal(err)
+				}
 			}
 			if strings.Split(resolvedHash, "/")[2] != testDefaultReadme {
 				t.Fatal("failed to resolve correct hash")
@@ -436,11 +452,19 @@ func TestRTFS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
-			size, refs, err := rtfs.DedupAndCalculatePinSize(testPIN, im)
+			var (
+				refs []string
+				size int64
+			)
+			if tt.name == "Direct" {
+				size, refs, err = rtfs.DedupAndCalculatePinSize(testPIN, im.WithAuthorization(tt.args.token))
+			} else {
+				size, refs, err = rtfs.DedupAndCalculatePinSize(testPIN, im)
+			}
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -469,18 +493,30 @@ func TestRTNS_PinUpdate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
-			// pin the content first
-			if err := im.Pin(oldPin); err != nil {
-				t.Fatal(err)
+			var newPath string
+			if tt.name == "Direct" {
+				// pin the content first
+				if err := im.WithAuthorization(tt.args.token).Pin(oldPin); err != nil {
+					t.Fatal(err)
+				}
+				if err := im.WithAuthorization(tt.args.token).Pin(newPin); err != nil {
+					t.Fatal(err)
+				}
+				newPath, err = im.WithAuthorization(tt.args.token).PinUpdate(oldPin, newPin)
+			} else {
+				// pin the content first
+				if err := im.Pin(oldPin); err != nil {
+					t.Fatal(err)
+				}
+				if err := im.Pin(newPin); err != nil {
+					t.Fatal(err)
+				}
+				newPath, err = im.PinUpdate(oldPin, newPin)
 			}
-			if err := im.Pin(newPin); err != nil {
-				t.Fatal(err)
-			}
-			newPath, err := im.PinUpdate(oldPin, newPin)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -510,11 +546,16 @@ func TestRefs(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout, tt.args.direct)
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
 			if err != nil {
 				t.Fatal(err)
 			}
-			references, err := im.Refs(testDefaultReadme, true, false)
+			var references []string
+			if tt.name == "Direct" {
+				references, err = im.WithAuthorization(tt.args.token).Refs(testDefaultReadme, true, false)
+			} else {
+				references, err = im.Refs(testDefaultReadme, true, false)
+			}
 			if err != nil {
 				t.Fatal(err)
 			}
