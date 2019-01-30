@@ -399,6 +399,7 @@ func TestNewObject(t *testing.T) {
 }
 
 func TestIPNS_Publish_And_Resolve(t *testing.T) {
+	t.Skip()
 	tests := []struct {
 		name string
 		args args
