@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	ipfsapi "github.com/RTradeLtd/go-ipfs-api"
 	"github.com/RTradeLtd/rtfs"
 )
 
@@ -24,27 +25,55 @@ const (
 	remoteNodeMultiAddr = "/ip4/172.218.49.115/tcp/4003/ipfs/Qmct4NniSeuCZ58mSpa7USsJRjCPzL4wTwqmjfa6ANTkMX"
 )
 
+type args struct {
+	addr    string
+	token   string
+	timeout time.Duration
+	direct  bool
+}
+
 func TestInitialize(t *testing.T) {
-	_, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if _, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout); err != nil {
+				t.Fatal(err)
+			}
+		})
 	}
 }
 
 func TestSwarmConnect(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), time.Minute*2)
-	defer cancel()
-	if err = im.SwarmConnect(ctx, remoteNodeMultiAddr); err != nil {
-		t.Fatal(err)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			ctx, cancel := context.WithTimeout(context.Background(), time.Minute*2)
+			defer cancel()
+			if err := im.SwarmConnect(ctx, remoteNodeMultiAddr); err != nil {
+				t.Fatal(err)
+			}
+		})
 	}
 }
 
 func TestCustomRequest(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, "", 5*time.Minute)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -58,111 +87,181 @@ func TestCustomRequest(t *testing.T) {
 }
 
 func TestPin(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-
-	// create pin
-	if err = im.Pin(testPIN); err != nil {
-		t.Error(err)
-		return
-	}
-
-	// check if pin was created
-	exists, err := im.CheckPin(testPIN)
-	if err != nil {
-		t.Error(err)
-		return
-	}
-	if !exists {
-		t.Error("pin not found")
-		return
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err = im.Pin(testPIN); err != nil {
+				t.Fatal(err)
+			}
+			if exists, err := im.CheckPin(testPIN); err != nil {
+				t.Fatal(err)
+			} else if !exists {
+				t.Fatal("pin does not exist")
+			}
+		})
 	}
 }
 
 func TestStat(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-	_, err = im.Stat(testPIN)
-	if err != nil {
-		t.Error(err)
-		return
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if stat, err := im.Stat(testPIN); err != nil {
+				t.Fatal(err)
+			} else if stat == nil {
+				t.Fatal("failed to retrieve oject stats")
+			}
+		})
 	}
 }
 
 func TestDagGet(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-	var out interface{}
-	if err = im.DagGet(testPIN, &out); err != nil {
-		t.Fatal(err)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var out interface{}
+			if err := im.DagGet(testPIN, &out); err != nil {
+				t.Fatal(err)
+			} else if out == nil {
+				t.Fatal("failed to get dag")
+			}
+		})
 	}
 }
 
 func TestDagPut(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-	type testDag struct {
-		Foo string `json:"foo"`
-		Bar string `json:"bar"`
-	}
-	a := testDag{"hello", "world"}
-	marshaled, err := json.Marshal(&a)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if resp, err := im.DagPut(marshaled, "json", "cbor"); err != nil {
-		t.Fatal(err)
-	} else if resp == "" {
-		t.Fatal("unexpected error occured")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			type testDag struct {
+				Foo string `json:"foo"`
+				Bar string `json:"bar"`
+			}
+			a := testDag{"hello", "world"}
+			marshaled, err := json.Marshal(&a)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if resp, err := im.DagPut(marshaled, "json", "cbor"); err != nil {
+				t.Fatal(err)
+			} else if resp != "zdpuAmPwEoNHBRTQENxpV2kzSVujozH8WzML19QHLxeitenXc" {
+				t.Fatal("failed to generate correct dag object")
+			}
+		})
 	}
 }
 
 func TestNodeAddress(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-	if im.NodeAddress() != nodeOneAPIAddr {
-		t.Fatal("bad node address retrieved")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if im.NodeAddress() != nodeOneAPIAddr {
+				t.Fatal("bad node address")
+			}
+		})
 	}
 }
 
 func TestAdd(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-	file, err := os.Open("./Makefile")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if resp, err := im.Add(file); err != nil {
-		t.Fatal(err)
-	} else if resp == "" {
-		t.Fatal("unexpected error occured")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			file, err := os.Open("./Makefile")
+			if err != nil {
+				t.Fatal(err)
+			}
+			if resp, err := im.Add(file); err != nil {
+				t.Fatal(err)
+			} else if resp != "QmSwK5Mw7YHP69gF6oYNZdsuuh37HR3SSiUxu3F5fXZ3az" {
+				t.Fatal("bad hash generated")
+			}
+		})
 	}
 }
 
 func TestPubSub_Success(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-	if err = im.PubSubPublish("topic", "data"); err != nil {
-		t.Fatal(err)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err = im.PubSubPublish("topic", "data"); err != nil {
+				t.Fatal(err)
+			}
+		})
 	}
 }
 
 func TestPubSub_Failure(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
+	im, err := rtfs.NewManager(nodeOneAPIAddr, "", 5*time.Minute)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -176,120 +275,199 @@ func TestPubSub_Failure(t *testing.T) {
 }
 
 func TestPatchLink(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-	newHash, err := im.PatchLink(testDefaultReadme, "testPatchLink", testPIN, false)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if newHash != "Qmaga5gbbcihFVvZefTJnKJEfadvgvtPeDnhcbqSHVAnTQ" {
-		t.Fatal("failed to correctly link objects")
-	}
-	templateObject, err := im.NewObject("unixfs-dir")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if _, err = im.PatchLink(templateObject, "a/b/c", templateObject, false); err == nil {
-		t.Fatal("failed to detect error")
-	}
-	newHash, err = im.PatchLink(templateObject, "a/b/c", templateObject, true)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if newHash != "QmQ5D3xbMWFQRC9BKqbvnSnHri31GqvtWG1G6rE8xAZf1J" {
-		t.Fatal("failed to correct patch object")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			newHash, err := im.PatchLink(testDefaultReadme, "testPatchLink", testPIN, false)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if newHash != "Qmaga5gbbcihFVvZefTJnKJEfadvgvtPeDnhcbqSHVAnTQ" {
+				t.Fatal("failed to correctly link objects")
+			}
+			templateObject, err := im.NewObject("unixfs-dir")
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err = im.PatchLink(templateObject, "a/b/c", templateObject, false); err == nil {
+				t.Fatal("failed to detect error")
+			}
+			newHash, err = im.PatchLink(templateObject, "a/b/c", templateObject, true)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if newHash != "QmQ5D3xbMWFQRC9BKqbvnSnHri31GqvtWG1G6rE8xAZf1J" {
+				t.Fatal("failed to correct patch object")
+			}
+		})
 	}
 }
-
 func TestAppendData(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-
-	newHash, err := im.AppendData(testPIN, "hello this is some data")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if newHash != "Qmd1SksxuY1aQqcStKv3HTNx9CnTsKhkhu9SqEaR4yrdK6" {
-		t.Fatal("failed to correctly append data")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			newHash, err := im.AppendData(testPIN, "hello this is some data")
+			if err != nil {
+				t.Fatal(err)
+			}
+			if newHash != "Qmd1SksxuY1aQqcStKv3HTNx9CnTsKhkhu9SqEaR4yrdK6" {
+				t.Fatal("failed to correctly append data")
+			}
+		})
 	}
 }
 
 func TestSetData(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-
-	newHash, err := im.SetData(testPIN, "hello this is some data")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if newHash != "QmdfQDSAZXtxvbypJgXXiz3PiC3jwVwujNSbZn5Tkvzq8S" {
-		t.Fatal("failed to correctly set data")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			newHash, err := im.SetData(testPIN, "hello this is some data")
+			if err != nil {
+				t.Fatal(err)
+			}
+			if newHash != "QmdfQDSAZXtxvbypJgXXiz3PiC3jwVwujNSbZn5Tkvzq8S" {
+				t.Fatal("failed to correctly set data")
+			}
+		})
 	}
 }
 
 func TestNewObject(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-	hash, err := im.NewObject("")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if hash != "QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n" {
-		t.Fatal("failed to generate new object")
-	}
-	hash, err = im.NewObject("faketemplate")
-	if err == nil {
-		t.Fatal("failed to recognize invalid template")
-	}
-	hash, err = im.NewObject("unixfs-dir")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if hash != "QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn" {
-		t.Fatal("failed to generate unixfs-dir template object")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			hash, err := im.NewObject("")
+			if err != nil {
+				t.Fatal(err)
+			}
+			if hash != "QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n" {
+				t.Fatal("failed to generate new object")
+			}
+			hash, err = im.NewObject("faketemplate")
+			if err == nil {
+				t.Fatal("failed to recognize invalid template")
+			}
+			hash, err = im.NewObject("unixfs-dir")
+			if err != nil {
+				t.Fatal(err)
+			}
+			if hash != "QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn" {
+				t.Fatal("failed to generate unixfs-dir template object")
+			}
+		})
 	}
 }
 
 func TestIPNS_Publish_And_Resolve(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	t.Skip()
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-	resp, err := im.Publish(testDefaultReadme, "self", time.Hour*24, time.Hour*24, true)
-	if err != nil {
-		t.Fatal(err)
-	}
-	resolvedHash, err := im.Resolve(resp.Name)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if strings.Split(resolvedHash, "/")[2] != testDefaultReadme {
-		t.Fatal("failed to resolve correct hash")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var (
+				resp         *ipfsapi.PublishResponse
+				resolvedHash string
+			)
+			if tt.name == "Direct" {
+				resp, err = im.Publish(testDefaultReadme, "self", time.Hour*24, time.Hour*24, true)
+				if err != nil {
+					t.Fatal(err)
+				}
+				resolvedHash, err = im.Resolve(resp.Name)
+				if err != nil {
+					t.Fatal(err)
+				}
+			} else {
+				resp, err = im.Publish(testDefaultReadme, "self", time.Hour*24, time.Hour*24, true)
+				if err != nil {
+					t.Fatal(err)
+				}
+				resolvedHash, err = im.Resolve(resp.Name)
+				if err != nil {
+					t.Fatal(err)
+				}
+			}
+			if strings.Split(resolvedHash, "/")[2] != testDefaultReadme {
+				t.Fatal("failed to resolve correct hash")
+			}
+		})
 	}
 }
 
 func TestRTFS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-	size, refs, err := rtfs.DedupAndCalculatePinSize(testRefsHash, im)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(refs) == 0 {
-		t.Fatal("invalid refs count")
-	}
-	if size != 15729672 {
-		t.Fatal("bad size recovered")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			size, refs, err := rtfs.DedupAndCalculatePinSize(testPIN, im)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if len(refs) != 18 {
+				t.Fatal("invalid refs count")
+			}
+			if size != 273131 {
+				t.Fatal("bad size recovered")
+			}
+		})
 	}
 }
 
@@ -299,35 +477,50 @@ func TestRTNS_PinUpdate(t *testing.T) {
 		newPin          = "QmbB6M914rwm9ZezVd2u8Y2k4g5TRoWWxP3PYKkDipCzpT"
 		expectedNewPath = "/ipfs/" + newPin
 	)
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
 	}
-	// pin the content first
-	if err := im.Pin(oldPin); err != nil {
-		t.Fatal(err)
-	}
-	if err := im.Pin(newPin); err != nil {
-		t.Fatal(err)
-	}
-	newPath, err := im.PinUpdate(oldPin, newPin)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if newPath != expectedNewPath {
-		t.Fatal("failed to correctly get new path")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var newPath string
+			if tt.name == "Direct" {
+				// pin the content first
+				if err := im.Pin(oldPin); err != nil {
+					t.Fatal(err)
+				}
+				if err := im.Pin(newPin); err != nil {
+					t.Fatal(err)
+				}
+				newPath, err = im.PinUpdate(oldPin, newPin)
+			} else {
+				// pin the content first
+				if err := im.Pin(oldPin); err != nil {
+					t.Fatal(err)
+				}
+				if err := im.Pin(newPin); err != nil {
+					t.Fatal(err)
+				}
+				newPath, err = im.PinUpdate(oldPin, newPin)
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			if newPath != expectedNewPath {
+				t.Fatal("failed to correctly get new path")
+			}
+		})
 	}
 }
 
 func TestRefs(t *testing.T) {
-	im, err := rtfs.NewManager(nodeOneAPIAddr, 5*time.Minute, false)
-	if err != nil {
-		t.Fatal(err)
-	}
-	references, err := im.Refs(testDefaultReadme, true, false)
-	if err != nil {
-		t.Fatal(err)
-	}
 	expected := []string{
 		"QmZTR5bcpQD7cFgTorqxZDYaew1Wqgfbd2ud9QqGPAkK2V",
 		"QmYCvbfNbCwFR45HiNP45rwJgvatpiW38D961L5qAhUM5Y",
@@ -337,9 +530,33 @@ func TestRefs(t *testing.T) {
 		"QmPZ9gcCEpqKTo6aq61g2nXGUhM4iCL3ewB6LDXZCtioEB",
 		"QmQ5vhrL7uv6tuoN9KeVBwd4PwfQkXdVVmDLUZuTNxqgvm",
 	}
-	sort.Strings(expected)
-	sort.Strings(references)
-	if !reflect.DeepEqual(expected, references) {
-		t.Fatal("recovered references not equal to expected")
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Non-Direct", args{nodeOneAPIAddr, "", time.Minute * 5, false}},
+		{"Direct", args{nodeOneAPIAddr, "hello", time.Minute * 5, true}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.addr, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var references []string
+			if tt.name == "Direct" {
+				references, err = im.Refs(testDefaultReadme, true, false)
+			} else {
+				references, err = im.Refs(testDefaultReadme, true, false)
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			sort.Strings(expected)
+			sort.Strings(references)
+			if !reflect.DeepEqual(expected, references) {
+				t.Fatal("recovered references not equal to expected")
+			}
+		})
 	}
 }

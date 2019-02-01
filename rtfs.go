@@ -18,16 +18,24 @@ type IpfsManager struct {
 	nodeAPIAddr string
 }
 
-// NewManager is used to initialize our Ipfs manager struct
-func NewManager(ipfsURL string, timeout time.Duration, direct bool) (*IpfsManager, error) {
-	// instantiate shell
-	sh := newShell(ipfsURL, direct)
-	// set timeout
-	sh.SetTimeout(timeout)
+// NewManager is used to instantiate IpfsManager with a connection to an ipfs api.
+// if token is provided, we use it to establish an authentication, direct connection
+// to an ipfs node api, which involves skipping multiaddr parsing. This is useful
+// in situations such as interacting with Nexus' delegator to talk with private ipfs
+// networks which use non-standard connection methods.
+func NewManager(ipfsURL, token string, timeout time.Duration) (*IpfsManager, error) {
+	var sh *ipfsapi.Shell
+	if token != "" {
+		sh = ipfsapi.NewDirectShell(ipfsURL).WithAuthorization(token)
+	} else {
+		sh = ipfsapi.NewShell(ipfsURL)
+	}
 	// validate we have an active connection
 	if _, err := sh.ID(); err != nil {
 		return nil, fmt.Errorf("failed to connect to ipfs node at '%s': %s", ipfsURL, err.Error())
 	}
+	// set timeout
+	sh.SetTimeout(timeout)
 	// instantiate and return manager
 	return &IpfsManager{
 		shell:       sh,
@@ -39,8 +47,8 @@ func NewManager(ipfsURL string, timeout time.Duration, direct bool) (*IpfsManage
 func (im *IpfsManager) NodeAddress() string { return im.nodeAPIAddr }
 
 // Add is a wrapper used to add a file to IPFS
-func (im *IpfsManager) Add(r io.Reader) (string, error) {
-	return im.shell.Add(r)
+func (im *IpfsManager) Add(r io.Reader, options ...ipfsapi.AddOpts) (string, error) {
+	return im.shell.Add(r, options...)
 }
 
 // DagPut is used to store data as an ipld object
@@ -55,7 +63,11 @@ func (im *IpfsManager) DagGet(cid string, out interface{}) error {
 
 // Cat is used to get cat an ipfs object
 func (im *IpfsManager) Cat(cid string) ([]byte, error) {
-	r, err := im.shell.Cat(cid)
+	var (
+		r   io.ReadCloser
+		err error
+	)
+	r, err = im.shell.Cat(cid)
 	if err != nil {
 		return nil, err
 	}
@@ -94,10 +106,7 @@ func (im *IpfsManager) NewObject(template string) (string, error) {
 // Pin is a wrapper method to pin a hash.
 // pinning prevents GC and persistently stores on disk
 func (im *IpfsManager) Pin(hash string) error {
-	if err := im.shell.Pin(hash); err != nil {
-		return fmt.Errorf("failed to pin '%s': %s", hash, err.Error())
-	}
-	return nil
+	return im.shell.Pin(hash)
 }
 
 // PinUpdate is used to update one pin to another, while making sure all objects
