@@ -22,7 +22,7 @@ const (
 	testRefsHash        = "QmPS6VssQGyBYjGQSK8ordvXaU1yUoaUmTfmrV7daLeRPH"
 	nodeOneAPIAddr      = "192.168.1.101:5001"
 	nodeTwoAPIAddr      = "192.168.2.101:5001"
-	remoteNodeMultiAddr = "/ip4/172.218.49.115/tcp/4003/ipfs/Qmct4NniSeuCZ58mSpa7USsJRjCPzL4wTwqmjfa6ANTkMX"
+	remoteNodeMultiAddr = "/ip4/172.218.49.115/tcp/4003/ipfs/QmXow5Vu8YXqvabkptQ7HddvNPpbLhXzmmU53yPCM54EQa
 )
 
 type args struct {
