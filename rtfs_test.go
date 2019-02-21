@@ -560,3 +560,31 @@ func TestRefs(t *testing.T) {
 		})
 	}
 }
+
+func TestAdd_Dir(t *testing.T) {
+	type args struct {
+		url     string
+		token   string
+		timeout time.Duration
+		dir     string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{"Pass", args{nodeOneAPIAddr, "", time.Minute * 5, "./beam"}, false},
+		{"Fail", args{nodeOneAPIAddr, "", time.Minute * 5, "/root/toor"}, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.url, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err := im.AddDir(tt.args.dir); (err != nil) != tt.wantErr {
+				t.Fatalf("AddDir() err = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
