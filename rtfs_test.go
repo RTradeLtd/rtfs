@@ -22,7 +22,7 @@ const (
 	testRefsHash        = "QmPS6VssQGyBYjGQSK8ordvXaU1yUoaUmTfmrV7daLeRPH"
 	nodeOneAPIAddr      = "192.168.1.101:5001"
 	nodeTwoAPIAddr      = "192.168.2.101:5001"
-	remoteNodeMultiAddr = "/ip4/172.218.49.115/tcp/4003/ipfs/Qmct4NniSeuCZ58mSpa7USsJRjCPzL4wTwqmjfa6ANTkMX"
+	remoteNodeMultiAddr = "/ip4/172.218.49.115/tcp/4003/ipfs/QmXow5Vu8YXqvabkptQ7HddvNPpbLhXzmmU53yPCM54EQa"
 )
 
 type args struct {
@@ -556,6 +556,34 @@ func TestRefs(t *testing.T) {
 			sort.Strings(references)
 			if !reflect.DeepEqual(expected, references) {
 				t.Fatal("recovered references not equal to expected")
+			}
+		})
+	}
+}
+
+func TestAdd_Dir(t *testing.T) {
+	type args struct {
+		url     string
+		token   string
+		timeout time.Duration
+		dir     string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{"Pass", args{nodeOneAPIAddr, "", time.Minute * 5, "./beam"}, false},
+		{"Fail", args{nodeOneAPIAddr, "", time.Minute * 5, "/root/toor"}, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			im, err := rtfs.NewManager(tt.args.url, tt.args.token, tt.args.timeout)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err := im.AddDir(tt.args.dir); (err != nil) != tt.wantErr {
+				t.Fatalf("AddDir() err = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
