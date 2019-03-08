@@ -8,7 +8,7 @@ require (
 	github.com/RTradeLtd/crypto v2.0.0+incompatible
 	github.com/RTradeLtd/entropy-mnemonics v0.0.0-20170316012907-7b01a644a636
 	github.com/RTradeLtd/go-ipfs-api v2.0.9+incompatible
-	github.com/gxed/hashland v0.0.1 // indirect
+	github.com/cheekybits/is v0.0.0-20150225183255-68e9c0620927 // indirect
 	github.com/ipfs/go-datastore v0.0.1
 	github.com/ipfs/go-ds-badger v0.0.2
 	github.com/ipfs/go-ipfs-files v0.0.1 // indirect
