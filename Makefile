@@ -15,7 +15,7 @@ build: deps
 
 .PHONY: testenv
 testenv:
-	( cd testenv ; make testenv )
+	( cd testenv ; make ipfs )
 
 .PHONY: test
 test: vendor
