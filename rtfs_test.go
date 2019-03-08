@@ -3,7 +3,6 @@ package rtfs_test
 import (
 	"context"
 	"encoding/json"
-	"log"
 	"os"
 	"reflect"
 	"sort"
@@ -233,8 +232,7 @@ func TestAdd(t *testing.T) {
 			}
 			if resp, err := im.Add(file); err != nil {
 				t.Fatal(err)
-			} else if resp != "QmSwK5Mw7YHP69gF6oYNZdsuuh37HR3SSiUxu3F5fXZ3az" {
-				log.Print(resp)
+			} else if resp != "QmY5K6qXSvn2uduiPputg9X13LjVYArBQWwdV8t6Ee4v2k" {
 				t.Fatal("bad hash generated")
 			}
 		})
