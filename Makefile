@@ -1,10 +1,13 @@
+GO=env GO111MODULE=on go
+GONOMOD=env GO111MODULE=off go
+
 all: build
 
 .PHONY: deps
 deps:
 	go get -u github.com/vburenin/ifacemaker
-	dep ensure -v $(DEPFLAGS)
-	git submodule update --init
+	$(GO) mod vendor
+	$(GO) mod tidy
 
 .PHONY: build
 build: deps
