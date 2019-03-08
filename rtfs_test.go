@@ -16,7 +16,7 @@ import (
 
 // test variables
 const (
-	testPIN             = "QmNZiPk974vDsPmQii3YbrMKfi12KTSNM7XMiYyiea4VYZ"
+	testPIN             = "QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv"
 	ipnsPath            = "/ipns/Qmd2GzQc68XXicmUpJZUadjsTcPUsXgP1iP1Hp6CYaY4xU"
 	testDefaultReadme   = "QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv"
 	testRefsHash        = "QmPS6VssQGyBYjGQSK8ordvXaU1yUoaUmTfmrV7daLeRPH"
@@ -226,13 +226,13 @@ func TestAdd(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			file, err := os.Open("./Makefile")
+			file, err := os.Open("./hello.txt")
 			if err != nil {
 				t.Fatal(err)
 			}
 			if resp, err := im.Add(file); err != nil {
 				t.Fatal(err)
-			} else if resp != "QmY5K6qXSvn2uduiPputg9X13LjVYArBQWwdV8t6Ee4v2k" {
+			} else if resp != "QmdDHMP6quqdW7n2a5uHkCPoeM1bqg7d4hFkZVyR7vYjCS" {
 				t.Fatal("bad hash generated")
 			}
 		})
@@ -292,7 +292,7 @@ func TestPatchLink(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if newHash != "Qmaga5gbbcihFVvZefTJnKJEfadvgvtPeDnhcbqSHVAnTQ" {
+			if newHash != "QmT2d72bKhhzXSQ5TJ72mPdc3sTQmdrwuPqqLfybL6uUVc" {
 				t.Fatal("failed to correctly link objects")
 			}
 			templateObject, err := im.NewObject("unixfs-dir")
@@ -330,7 +330,7 @@ func TestAppendData(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if newHash != "Qmd1SksxuY1aQqcStKv3HTNx9CnTsKhkhu9SqEaR4yrdK6" {
+			if newHash != "QmSaEmskKhcd45e94giip1cmHdBq3oydhVL2sNV7Tf474u" {
 				t.Fatal("failed to correctly append data")
 			}
 		})
@@ -355,7 +355,7 @@ func TestSetData(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if newHash != "QmdfQDSAZXtxvbypJgXXiz3PiC3jwVwujNSbZn5Tkvzq8S" {
+			if newHash != "QmVyk9mFoZmUgw5zMh6GkF7FQRKGxzTxMZmQRSJaGJq9FK" {
 				t.Fatal("failed to correctly set data")
 			}
 		})
@@ -461,10 +461,10 @@ func TestRTFS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if len(refs) != 18 {
+			if len(refs) != 7 {
 				t.Fatal("invalid refs count")
 			}
-			if size != 273131 {
+			if size != 6169 {
 				t.Fatal("bad size recovered")
 			}
 		})
@@ -472,11 +472,6 @@ func TestRTFS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
 }
 
 func TestRTNS_PinUpdate(t *testing.T) {
-	var (
-		oldPin          = "zb2rheJDzFsa7AsCnSxKimX8eF5wkjriJqeGBamjQF79vr14R"
-		newPin          = "QmbB6M914rwm9ZezVd2u8Y2k4g5TRoWWxP3PYKkDipCzpT"
-		expectedNewPath = "/ipfs/" + newPin
-	)
 	tests := []struct {
 		name string
 		args args
@@ -490,32 +485,25 @@ func TestRTNS_PinUpdate(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			var newPath string
-			if tt.name == "Direct" {
-				// pin the content first
-				if err := im.Pin(oldPin); err != nil {
-					t.Fatal(err)
-				}
-				if err := im.Pin(newPin); err != nil {
-					t.Fatal(err)
-				}
-				newPath, err = im.PinUpdate(oldPin, newPin)
-			} else {
-				// pin the content first
-				if err := im.Pin(oldPin); err != nil {
-					t.Fatal(err)
-				}
-				if err := im.Pin(newPin); err != nil {
-					t.Fatal(err)
-				}
-				newPath, err = im.PinUpdate(oldPin, newPin)
-			}
+			hash, err := im.Add(strings.NewReader("hello"))
 			if err != nil {
 				t.Fatal(err)
 			}
-			if newPath != expectedNewPath {
-				t.Fatal("failed to correctly get new path")
+			newHash, err := im.AppendData(testPIN, hash)
+			if err != nil {
+				t.Fatal(err)
 			}
+			if err := im.Pin(testPIN); err != nil {
+				t.Fatal(err)
+			}
+			newPin, err := im.PinUpdate(testPIN, newHash)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if newPin != "/ipfs/QmXf3Mfh4bkdh2TuYiVN8EcEVXyAhoDpvriCXgQAj6hCzu" {
+				t.Fatal("bad pin update")
+			}
+
 		})
 	}
 }
