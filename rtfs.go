@@ -110,6 +110,11 @@ func (im *IpfsManager) NewObject(template string) (string, error) {
 	return im.shell.NewObject(template)
 }
 
+// ObjectPut is used to store an object on ipfs
+func (im *IpfsManager) ObjectPut(obj *ipfsapi.IpfsObject) (string, error) {
+	return im.shell.ObjectPut(obj)
+}
+
 // Pin is a wrapper method to pin a hash.
 // pinning prevents GC and persistently stores on disk
 func (im *IpfsManager) Pin(hash string) error {
