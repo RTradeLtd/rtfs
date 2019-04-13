@@ -182,7 +182,8 @@ func TestDagPut(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if resp, err := im.DagPut(marshaled, "json", "cbor"); err != nil {
+
+			if resp, err := im.DagPut(marshaled); err != nil {
 				t.Fatal(err)
 			} else if resp != "zdpuAmPwEoNHBRTQENxpV2kzSVujozH8WzML19QHLxeitenXc" {
 				t.Fatal("failed to generate correct dag object")

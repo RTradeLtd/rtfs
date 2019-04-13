@@ -8,6 +8,7 @@ import (
 	"time"
 
 	ipfsapi "github.com/RTradeLtd/go-ipfs-api"
+	"github.com/RTradeLtd/go-ipfs-api/options"
 )
 
 // Manager provides functions for interacting with IPFS
@@ -19,7 +20,7 @@ type Manager interface {
 	// AddDir is used to add a directory to ipfs
 	AddDir(dir string) (string, error)
 	// DagPut is used to store data as an ipld object
-	DagPut(data interface{}, encoding, kind string) (string, error)
+	DagPut(data interface{}, opts ...options.DagPutOption) (string, error)
 	// DagGet is used to get an ipld object
 	DagGet(cid string, out interface{}) error
 	// Cat is used to get cat an ipfs object

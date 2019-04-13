@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/RTradeLtd/go-ipfs-api/options"
+
 	ipfsapi "github.com/RTradeLtd/go-ipfs-api"
 )
 
@@ -57,8 +59,8 @@ func (im *IpfsManager) AddDir(dir string) (string, error) {
 }
 
 // DagPut is used to store data as an ipld object
-func (im *IpfsManager) DagPut(data interface{}, encoding, kind string) (string, error) {
-	return im.shell.DagPut(data, encoding, kind)
+func (im *IpfsManager) DagPut(data interface{}, opts ...options.DagPutOption) (string, error) {
+	return im.shell.DagPutWithOpts(data, opts...)
 }
 
 // DagGet is used to get an ipld object
@@ -191,6 +193,7 @@ func (im *IpfsManager) SwarmConnect(ctx context.Context, addrs ...string) error 
 
 // Refs is used to retrieve references of a hash
 func (im *IpfsManager) Refs(hash string, recursive, unique bool) ([]string, error) {
+
 	refs, err := im.shell.Refs(hash, recursive, unique)
 	if err != nil {
 		return nil, err

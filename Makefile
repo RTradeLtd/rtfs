@@ -5,7 +5,7 @@ all: build
 
 .PHONY: deps
 deps:
-	go get -u github.com/vburenin/ifacemaker
+	$(GO) get -u github.com/vburenin/ifacemaker
 	$(GO) mod vendor
 	$(GO) mod tidy
 
