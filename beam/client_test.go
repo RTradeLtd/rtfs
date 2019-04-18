@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/RTradeLtd/config"
-	"github.com/RTradeLtd/rtfs"
-	"github.com/RTradeLtd/rtfs/beam"
+	"github.com/RTradeLtd/rtfs/v2"
+	"github.com/RTradeLtd/rtfs/v2/beam"
 )
 
 func TestBeam(t *testing.T) {

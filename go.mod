@@ -1,4 +1,4 @@
-module github.com/RTradeLtd/rtfs
+module github.com/RTradeLtd/rtfs/v2
 
 go 1.12
 
