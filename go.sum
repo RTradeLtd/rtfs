@@ -10,6 +10,7 @@ github.com/DataDog/zstd v1.3.5/go.mod h1:1jcaCB/ufaK+sKp1NBhlGmpz41jOoPQ35bpF36t
 github.com/DataDog/zstd v1.4.0/go.mod h1:1jcaCB/ufaK+sKp1NBhlGmpz41jOoPQ35bpF36t7BBo=
 github.com/Kubuxu/go-os-helper v0.0.1/go.mod h1:N8B+I7vPCT80IcP58r50u4+gEEcsZETFUpAzWW2ep1Y=
 github.com/RTradeLtd/cmd/v2 v2.1.0/go.mod h1:fIVjC55FRGZEtCbXgtAlAiKYIJozBQ1oYTV4MJufTKg=
+github.com/RTradeLtd/config/v2 v2.1.1 h1:6jhXT+p/0Py14QAV/5Y15E5ggAB4RLNZGVw3D5IEius=
 github.com/RTradeLtd/config/v2 v2.1.1/go.mod h1:juSzxBr84ZeNera4QtOZ7khT9AAtqvyPPn/rx2dgzp4=
 github.com/RTradeLtd/crypto/v2 v2.1.1 h1:P59zYkkNkl6K1KiTRvW52AYwLvwmtzuzZ9+AjLWmKsU=
 github.com/RTradeLtd/crypto/v2 v2.1.1/go.mod h1:saIQ67Btn4JWsOdzjn9U6Dl+aZlg+YKgg4RsQKXxjf4=
