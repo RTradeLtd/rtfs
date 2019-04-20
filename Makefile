@@ -15,7 +15,7 @@ build: deps
 
 .PHONY: testenv
 testenv:
-	( cd testenv ; make ipfs )
+	cd testenv ; make testenv
 
 .PHONY: test
 test: vendor
@@ -27,7 +27,7 @@ lint: vendor
 
 .PHONY: clean
 clean:
-	( cd testenv ; make clean )
+	cd testenv ; make clean
 
 .PHONY: check
 check:

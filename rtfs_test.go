@@ -11,7 +11,7 @@ import (
 	"time"
 
 	ipfsapi "github.com/RTradeLtd/go-ipfs-api"
-	"github.com/RTradeLtd/rtfs"
+	"github.com/RTradeLtd/rtfs/v2"
 )
 
 // test variables

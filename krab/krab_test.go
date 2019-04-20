@@ -6,7 +6,7 @@ import (
 
 	ci "github.com/libp2p/go-libp2p-crypto"
 
-	"github.com/RTradeLtd/rtfs/krab"
+	"github.com/RTradeLtd/rtfs/v2/krab"
 )
 
 const (

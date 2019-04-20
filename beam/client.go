@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"time"
 
-	"github.com/RTradeLtd/rtfs"
+	"github.com/RTradeLtd/rtfs/v2"
 )
 
 // Laser is used to transfer content between two different private networks
