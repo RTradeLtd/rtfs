@@ -15,7 +15,7 @@ build: deps
 
 .PHONY: testenv
 testenv:
-	$(MAKE) -C testenv testenv
+	cd testenv ; make testenv
 
 .PHONY: test
 test: vendor
@@ -27,7 +27,7 @@ lint: vendor
 
 .PHONY: clean
 clean:
-	$(MAKE) -C testenv clean
+	cd testenv ; make clean
 
 .PHONY: check
 check:
