@@ -6,9 +6,11 @@ require (
 	github.com/AndreasBriese/bbloom v0.0.0-20190306092124-e2d15f34fcf9 // indirect
 	github.com/Kubuxu/go-os-helper v0.0.1 // indirect
 	github.com/RTradeLtd/config/v2 v2.1.1
+	github.com/RTradeLtd/crypto v2.0.0+incompatible // indirect
 	github.com/RTradeLtd/crypto/v2 v2.1.1
 	github.com/RTradeLtd/entropy-mnemonics v0.0.0-20170316012907-7b01a644a636
-	github.com/RTradeLtd/go-ipfs-api v0.0.0-20190308091756-8b7099fd5e21
+	github.com/RTradeLtd/go-ipfs-api v0.0.0-20190504023509-90b6ff442985
+	github.com/RTradeLtd/rtfs v2.0.1+incompatible
 	github.com/btcsuite/btcd v0.0.0-20190418232430-6867ff32788a // indirect
 	github.com/btcsuite/btcutil v0.0.0-20190316010144-3ac1210f4b38 // indirect
 	github.com/btcsuite/goleveldb v1.0.0 // indirect
