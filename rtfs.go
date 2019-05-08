@@ -184,33 +184,9 @@ func (im *IpfsManager) CustomRequest(ctx context.Context, url, commad string,
 	return resp, nil
 }
 
-// GetLogs returns a wrapper around the `log/tail` API
+// GetLogs is used to return our logger
 func (im *IpfsManager) GetLogs(ctx context.Context) (ipfsapi.Logger, error) {
 	return im.shell.GetLogs(ctx)
-}
-
-// FilterLogs is used to filter logs for a particular system
-func (im *IpfsManager) FilterLogs(ctx context.Context, lg ipfsapi.Logger, system string) ([]map[string]interface{}, error) {
-	var logs []map[string]interface{}
-	for {
-		select {
-		case <-ctx.Done():
-			return logs, lg.Close()
-		default:
-			log, err := lg.Next()
-			if err != nil {
-				continue
-			}
-			sys, ok := log["system"].(string)
-			if !ok {
-				continue
-			}
-			if sys != system {
-				continue
-			}
-			logs = append(logs, log)
-		}
-	}
 }
 
 // SwarmConnect is use to open a connection a one or more ipfs nodes
