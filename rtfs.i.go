@@ -58,6 +58,8 @@ type Manager interface {
 	PubSubPublish(topic string, data string) error
 	// CustomRequest is used to make a custom request
 	CustomRequest(ctx context.Context, url, commad string, opts map[string]string, args ...string) (*ipfsapi.Response, error)
+	// GetLogs is used to return our logger
+	GetLogs(ctx context.Context) (ipfsapi.Logger, error)
 	// SwarmConnect is use to open a connection a one or more ipfs nodes
 	SwarmConnect(ctx context.Context, addrs ...string) error
 	// Refs is used to retrieve references of a hash

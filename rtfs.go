@@ -184,6 +184,11 @@ func (im *IpfsManager) CustomRequest(ctx context.Context, url, commad string,
 	return resp, nil
 }
 
+// GetLogs is used to return our logger
+func (im *IpfsManager) GetLogs(ctx context.Context) (ipfsapi.Logger, error) {
+	return im.shell.GetLogs(ctx)
+}
+
 // SwarmConnect is use to open a connection a one or more ipfs nodes
 func (im *IpfsManager) SwarmConnect(ctx context.Context, addrs ...string) error {
 	return im.shell.SwarmConnect(ctx, addrs...)

@@ -49,6 +49,23 @@ func TestInitialize(t *testing.T) {
 	}
 }
 
+func TestFilterLogs(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	m, err := rtfs.NewManager(nodeOneAPIAddr, "", time.Minute*5)
+	if err != nil {
+		t.Fatal(err)
+	}
+	logs, err := m.GetLogs(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var nilLogger ipfsapi.Logger
+	if logs == nilLogger {
+		t.Fatal("logs are nil")
+	}
+}
+
 func TestSwarmConnect(t *testing.T) {
 	tests := []struct {
 		name string
