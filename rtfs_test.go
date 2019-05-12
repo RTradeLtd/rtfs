@@ -3,7 +3,6 @@ package rtfs_test
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"os"
 	"reflect"
 	"sort"
@@ -61,12 +60,9 @@ func TestFilterLogs(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	results, err := m.FilterLogs(ctx, logs, "gc")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(results) > 0 {
-		fmt.Printf("%+v\n", results[0])
+	var nilLogger ipfsapi.Logger
+	if logs == nilLogger {
+		t.Fatal("logs are nil")
 	}
 }
 
