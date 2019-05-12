@@ -184,7 +184,7 @@ func (im *IpfsManager) CustomRequest(ctx context.Context, url, commad string,
 	return resp, nil
 }
 
-// GetLogs is used to return our logger
+// GetLogs is used to return a logger for the IPFS HTTP API call log/tail
 func (im *IpfsManager) GetLogs(ctx context.Context) (ipfsapi.Logger, error) {
 	return im.shell.GetLogs(ctx)
 }
