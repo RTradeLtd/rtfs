@@ -16,13 +16,14 @@ import (
 
 // test variables
 const (
-	testPIN             = "QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv"
-	ipnsPath            = "/ipns/Qmd2GzQc68XXicmUpJZUadjsTcPUsXgP1iP1Hp6CYaY4xU"
-	testDefaultReadme   = "QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv"
-	testRefsHash        = "QmPS6VssQGyBYjGQSK8ordvXaU1yUoaUmTfmrV7daLeRPH"
-	nodeOneAPIAddr      = "192.168.1.101:5001"
-	nodeTwoAPIAddr      = "192.168.2.101:5001"
-	remoteNodeMultiAddr = "/ip4/172.218.49.115/tcp/4003/ipfs/QmXow5Vu8YXqvabkptQ7HddvNPpbLhXzmmU53yPCM54EQa"
+	testPIN                = "QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv"
+	ipnsPath               = "/ipns/Qmd2GzQc68XXicmUpJZUadjsTcPUsXgP1iP1Hp6CYaY4xU"
+	testDefaultReadme      = "QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv"
+	testRefsHash           = "QmPS6VssQGyBYjGQSK8ordvXaU1yUoaUmTfmrV7daLeRPH"
+	nodeOneAPIAddr         = "192.168.1.101:5001"
+	nodeTwoAPIAddr         = "192.168.2.101:5001"
+	remoteNodeOneMultiAddr = "/ip4/172.218.49.115/tcp/4003/ipfs/QmXow5Vu8YXqvabkptQ7HddvNPpbLhXzmmU53yPCM54EQa"
+	remoteNodeTwoMultiAddr = "/ip4/172.218.49.115/tcp/4002/ipfs/QmPvnFXWAz1eSghXD6JKpHxaGjbVo4VhBXY2wdBxKPbne5"
 )
 
 type args struct {
@@ -80,10 +81,12 @@ func TestSwarmConnect(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			ctx, cancel := context.WithTimeout(context.Background(), time.Minute*2)
+			ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
 			defer cancel()
-			if err := im.SwarmConnect(ctx, remoteNodeMultiAddr); err != nil {
-				t.Fatal(err)
+			if err := im.SwarmConnect(ctx, remoteNodeOneMultiAddr); err != nil {
+				if err := im.SwarmConnect(ctx, remoteNodeTwoMultiAddr); err != nil {
+					t.Fatal(err)
+				}
 			}
 		})
 	}
