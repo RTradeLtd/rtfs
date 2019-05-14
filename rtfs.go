@@ -10,6 +10,7 @@ import (
 	"time"
 
 	ipfsapi "github.com/RTradeLtd/go-ipfs-api"
+	httpapi "github.com/ipfs/go-ipfs-http-client"
 )
 
 // IpfsManager is our helper wrapper for IPFS
@@ -166,8 +167,8 @@ func (im *IpfsManager) PubSubPublish(topic string, data string) error {
 
 // CustomRequest is used to make a custom request
 func (im *IpfsManager) CustomRequest(ctx context.Context, url, commad string,
-	opts map[string]string, args ...string) (*ipfsapi.Response, error) {
-	req := ipfsapi.NewRequest(ctx, url, commad, args...)
+	opts map[string]string, args ...string) (*httpapi.Response, error) {
+	req := httpapi.NewRequest(ctx, url, commad, args...)
 	if len(opts) > 0 {
 		currentOpts := req.Opts
 		for k, v := range opts {

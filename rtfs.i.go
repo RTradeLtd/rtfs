@@ -8,6 +8,7 @@ import (
 	"time"
 
 	ipfsapi "github.com/RTradeLtd/go-ipfs-api"
+	httpapi "github.com/ipfs/go-ipfs-http-client"
 )
 
 // Manager provides functions for interacting with IPFS
@@ -57,8 +58,8 @@ type Manager interface {
 	// PubSubPublish is used to publish a a message to the given topic
 	PubSubPublish(topic string, data string) error
 	// CustomRequest is used to make a custom request
-	CustomRequest(ctx context.Context, url, commad string, opts map[string]string, args ...string) (*ipfsapi.Response, error)
-	// GetLogs is used to return our logger
+	CustomRequest(ctx context.Context, url, commad string, opts map[string]string, args ...string) (*httpapi.Response, error)
+	// GetLogs is used to return a logger for the IPFS HTTP API call log/tail
 	GetLogs(ctx context.Context) (ipfsapi.Logger, error)
 	// SwarmConnect is use to open a connection a one or more ipfs nodes
 	SwarmConnect(ctx context.Context, addrs ...string) error
