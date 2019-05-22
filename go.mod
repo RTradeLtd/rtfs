@@ -9,7 +9,7 @@ require (
 	github.com/RTradeLtd/crypto v2.0.0+incompatible // indirect
 	github.com/RTradeLtd/crypto/v2 v2.1.1
 	github.com/RTradeLtd/entropy-mnemonics v0.0.0-20170316012907-7b01a644a636
-	github.com/RTradeLtd/go-ipfs-api v0.0.0-20190504023509-90b6ff442985
+	github.com/RTradeLtd/go-ipfs-api v0.0.0-20190522213636-8e3700e602fd
 	github.com/RTradeLtd/rtfs v2.0.1+incompatible // indirect
 	github.com/btcsuite/btcd v0.0.0-20190427004231-96897255fd17 // indirect
 	github.com/btcsuite/goleveldb v1.0.0 // indirect

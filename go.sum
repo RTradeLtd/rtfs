@@ -22,6 +22,8 @@ github.com/RTradeLtd/go-ipfs-api v0.0.0-20190308091756-8b7099fd5e21 h1:AHtzjhhX6
 github.com/RTradeLtd/go-ipfs-api v0.0.0-20190308091756-8b7099fd5e21/go.mod h1:ipDfy60LjYDddlX/zluSwRVtfGR0EB1HqADazGNMUmE=
 github.com/RTradeLtd/go-ipfs-api v0.0.0-20190504023509-90b6ff442985 h1:Zc7a57bnYwRLXsfdWTI2lVh0ORsXhAfpVdkL7gDuk3o=
 github.com/RTradeLtd/go-ipfs-api v0.0.0-20190504023509-90b6ff442985/go.mod h1:ipDfy60LjYDddlX/zluSwRVtfGR0EB1HqADazGNMUmE=
+github.com/RTradeLtd/go-ipfs-api v0.0.0-20190522213636-8e3700e602fd h1:7Bg+FysjhbCnpWXNxrXyJDJtNipeqTHKNbg2hPglwV8=
+github.com/RTradeLtd/go-ipfs-api v0.0.0-20190522213636-8e3700e602fd/go.mod h1:ipDfy60LjYDddlX/zluSwRVtfGR0EB1HqADazGNMUmE=
 github.com/RTradeLtd/rtfs v2.0.1+incompatible h1:E5mG0RCFYnWjWf2pAb+k+eR2tZ3nlqCRenMhCKMKLQQ=
 github.com/RTradeLtd/rtfs v2.0.1+incompatible/go.mod h1:6ASGKwTU8Bf0o3YOGzXsU2oVmjX36GCvleKGEScXCe8=
 github.com/Shopify/sarama v1.19.0/go.mod h1:FVkBWblsNy7DGZRfXLU0O9RCGt5g3g3yEuWXgklEdEo=
