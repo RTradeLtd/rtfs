@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/RTradeLtd/rtfs/v2/krab"
+	"github.com/RTradeLtd/krab"
 
 	mnemonics "github.com/RTradeLtd/entropy-mnemonics"
 	ci "github.com/libp2p/go-libp2p-crypto"

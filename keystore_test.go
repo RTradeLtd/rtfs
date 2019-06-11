@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/RTradeLtd/rtfs/v2/krab"
+	"github.com/RTradeLtd/krab"
 
 	"github.com/RTradeLtd/rtfs/v2"
 	ci "github.com/libp2p/go-libp2p-crypto"
