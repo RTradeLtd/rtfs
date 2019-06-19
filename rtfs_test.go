@@ -20,8 +20,7 @@ const (
 	ipnsPath               = "/ipns/Qmd2GzQc68XXicmUpJZUadjsTcPUsXgP1iP1Hp6CYaY4xU"
 	testDefaultReadme      = "QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv"
 	testRefsHash           = "QmPS6VssQGyBYjGQSK8ordvXaU1yUoaUmTfmrV7daLeRPH"
-	nodeOneAPIAddr         = "192.168.1.101:5001"
-	nodeTwoAPIAddr         = "192.168.2.101:5001"
+	nodeOneAPIAddr         = "127.0.0.1:5001"
 	remoteNodeOneMultiAddr = "/ip4/172.218.49.115/tcp/4003/ipfs/QmXow5Vu8YXqvabkptQ7HddvNPpbLhXzmmU53yPCM54EQa"
 	remoteNodeTwoMultiAddr = "/ip4/172.218.49.115/tcp/4002/ipfs/QmPvnFXWAz1eSghXD6JKpHxaGjbVo4VhBXY2wdBxKPbne5"
 )
@@ -204,7 +203,7 @@ func TestDagPut(t *testing.T) {
 			}
 			if resp, err := im.DagPut(marshaled, "json", "cbor"); err != nil {
 				t.Fatal(err)
-			} else if resp != "zdpuAmPwEoNHBRTQENxpV2kzSVujozH8WzML19QHLxeitenXc" {
+			} else if resp != "bafyreiaopeffny6qlthkjaoqri4qz5ru544mfpjfo3rvkgv4qq2zfjvgtm" {
 				t.Fatal("failed to generate correct dag object")
 			}
 		})
@@ -520,10 +519,9 @@ func TestRTNS_PinUpdate(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if newPin != "/ipfs/QmXf3Mfh4bkdh2TuYiVN8EcEVXyAhoDpvriCXgQAj6hCzu" {
+			if newPin != "QmXf3Mfh4bkdh2TuYiVN8EcEVXyAhoDpvriCXgQAj6hCzu" {
 				t.Fatal("bad pin update")
 			}
-
 		})
 	}
 }
