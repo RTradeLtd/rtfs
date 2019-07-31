@@ -1,15 +1,14 @@
 # 🌐 rtfs [![GoDoc](https://godoc.org/github.com/RTradeLtd/rtfs?status.svg)](https://godoc.org/github.com/RTradeLtd/rtfs) [![Build Status](https://travis-ci.com/RTradeLtd/rtfs.svg?branch=master)](https://travis-ci.com/RTradeLtd/rtfs) [![codecov](https://codecov.io/gh/RTradeLtd/rtfs/branch/master/graph/badge.svg)](https://codecov.io/gh/RTradeLtd/rtfs) [![Go Report Card](https://goreportcard.com/badge/github.com/RTradeLtd/rtfs)](https://goreportcard.com/report/github.com/RTradeLtd/rtfs)
 
-Package rtfs is a helper library for interacting with IPFS and IPFS keys.
-It is used by [Temporal](https://github.com/RTradeLtd/Temporal), an easy-to-use
-interface into distributed and decentralized storage technologies for personal
-and enterprise use cases.
+rtfs包是一个用于IPFS节点与IPFS秘钥
+交互的帮助库，它被应用于 [Temporal](https://github.com/RTradeLtd/Temporal)中。
 
-## Multi-Language
+## 多语言
 
 [![](https://img.shields.io/badge/Lang-English-blue.svg)](README.md)  [![jaywcjlove/sb](https://jaywcjlove.github.io/sb/lang/chinese.svg)](README-zh.md)
 
-## Usage
+
+## 用例
 
 ```
 go get github.com/RTradeLtd/rtfs/v2
