@@ -7,9 +7,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/RTradeLtd/krab"
-
+	"github.com/RTradeLtd/krab/v4"
 	"github.com/RTradeLtd/rtfs/v2"
+	"github.com/ipfs/go-datastore"
+	dssync "github.com/ipfs/go-datastore/sync"
 	ci "github.com/libp2p/go-libp2p-crypto"
 )
 
@@ -19,7 +20,10 @@ func TestKeystoreManager(t *testing.T) {
 			t.Fatal(err)
 		}
 	}()
-	kb, err := krab.NewKrab(krab.Opts{Passphrase: "password123", DSPath: "temp"})
+	kb, err := krab.NewKeystore(dssync.MutexWrap(datastore.NewMapDatastore()), "password123")
+	if err != nil {
+		t.Fatal(err)
+	}
 	km, err := rtfs.NewKeystoreManager(kb)
 	if err != nil {
 		t.Fatal(err)
@@ -83,7 +87,7 @@ func TestGetKey(t *testing.T) {
 		k1 = "b6ec4a647a7738ef8eea3b21777ecf41630d6d0ac79dc36739d81e927f910a65"
 		k2 = "test1"
 	)
-	kb, err := krab.NewKrab(krab.Opts{Passphrase: "password123", DSPath: "temp"})
+	kb, err := krab.NewKeystore(dssync.MutexWrap(datastore.NewMapDatastore()), "password123")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -131,7 +135,10 @@ func Blah(t *testing.T) {
 			t.Fatal(err)
 		}
 	}()
-	kb, err := krab.NewKrab(krab.Opts{Passphrase: "password123", DSPath: "temp"})
+	kb, err := krab.NewKeystore(dssync.MutexWrap(datastore.NewMapDatastore()), "password123")
+	if err != nil {
+		t.Fatal(err)
+	}
 	km, err := rtfs.NewKeystoreManager(kb)
 	if err != nil {
 		t.Fatal(err)

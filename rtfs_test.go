@@ -486,6 +486,13 @@ func TestRTFS_Dedups_And_Calculate_Ref_Size(t *testing.T) {
 			if size != 6169 {
 				t.Fatal("bad size recovered")
 			}
+			size2, err := rtfs.DeduplicatedSize(testPin)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if size2 != size {
+				t.Fatal("bad sizere covered")
+			}
 		})
 	}
 }

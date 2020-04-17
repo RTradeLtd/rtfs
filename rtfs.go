@@ -206,3 +206,21 @@ func (im *IpfsManager) Refs(hash string, recursive, unique bool) ([]string, erro
 	}
 	return references, nil
 }
+
+// DeduplicatedSize will calculate the deduplicated size of an object.
+// This is limited to UnixFS object types
+func (im *IpfsManager) DeduplicatedSize(hash string) (int, error) {
+	refs, err := im.Refs(hash, true, true)
+	if err != nil {
+		return 0, err
+	}
+	var totalRefSize int
+	for _, ref := range refs {
+		refStats, err := im.Stat(ref)
+		if err != nil {
+			return 0, err
+		}
+		totalRefSize += refStats.DataSize
+	}
+	return totalRefSize, nil
+}

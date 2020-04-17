@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/RTradeLtd/krab"
+	"github.com/RTradeLtd/krab/v4"
 
 	mnemonics "github.com/RTradeLtd/entropy-mnemonics"
 	ci "github.com/libp2p/go-libp2p-crypto"
@@ -12,12 +12,12 @@ import (
 
 // KeystoreManager is howe we manipulat keys
 type KeystoreManager struct {
-	store *krab.Krab
+	store *krab.Keystore
 }
 
 // NewKeystoreManager instantiates a new keystore manager. Takes an optional
 // filepath for the store.
-func NewKeystoreManager(store *krab.Krab) (*KeystoreManager, error) {
+func NewKeystoreManager(store *krab.Keystore) (*KeystoreManager, error) {
 	return &KeystoreManager{
 		store: store,
 	}, nil
