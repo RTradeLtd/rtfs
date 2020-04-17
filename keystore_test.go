@@ -58,7 +58,7 @@ func TestKeystoreManager(t *testing.T) {
 		t.Fatal("key found when it should'nt have been")
 	}
 	// DO NOT USE 1024 IN PRODUCTION, >= 2048
-	pk, _, err := ci.GenerateKeyPair(ci.RSA, 1024)
+	pk, _, err := ci.GenerateKeyPair(ci.RSA, 2048)
 	if err != nil {
 		t.Fatal(err)
 	}
