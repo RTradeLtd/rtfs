@@ -402,7 +402,7 @@ func TestNewObject(t *testing.T) {
 			if hash != "QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n" {
 				t.Fatal("failed to generate new object")
 			}
-			hash, err = im.NewObject("faketemplate")
+			_, err = im.NewObject("faketemplate")
 			if err == nil {
 				t.Fatal("failed to recognize invalid template")
 			}
