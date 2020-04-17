@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	ipfsapi "github.com/RTradeLtd/go-ipfs-api"
+	ipfsapi "github.com/RTradeLtd/go-ipfs-api/v3"
 	"github.com/RTradeLtd/rtfs/v2"
 )
 

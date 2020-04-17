@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"time"
 
-	ipfsapi "github.com/RTradeLtd/go-ipfs-api"
+	ipfsapi "github.com/RTradeLtd/go-ipfs-api/v3"
 )
 
 // IpfsManager is our helper wrapper for IPFS
@@ -26,7 +26,7 @@ type IpfsManager struct {
 func NewManager(ipfsURL, token string, timeout time.Duration) (*IpfsManager, error) {
 	var sh *ipfsapi.Shell
 	if token != "" {
-		sh = ipfsapi.NewDirectShell(ipfsURL).WithAuthorization(token)
+		sh = ipfsapi.NewDirectShell(ipfsURL).WithAuthorization(token, nil)
 	} else {
 		sh = ipfsapi.NewShell(ipfsURL)
 	}

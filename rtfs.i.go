@@ -7,7 +7,7 @@ import (
 	"io"
 	"time"
 
-	ipfsapi "github.com/RTradeLtd/go-ipfs-api"
+	ipfsapi "github.com/RTradeLtd/go-ipfs-api/v3"
 )
 
 // Manager provides functions for interacting with IPFS
